@@ -104,8 +104,99 @@ python manage.py makemigrations --empty [앱명]
 --empty 옵션을 주게되면 operations가 비어있는 마이그레이션 파일이 생성된다. 여기다가 직접 operations를 작성하여 migrate를 해도된다. (능력이 된다면 ㅋ)  
 
 ## view 작성  
+view를 작성하기 이전에 장고의 **MTV(Model-View-Template) 패턴**에 대해 간단하게 짚고 넘어가겠다. 
+Spring 프레임워크에는 MVC(Model-View-Controller)가 있다. 여기서 View는 사용자에게 보여지는 면이라고 이해하면 쉽다. View에게 사용자의 입력이 주어지면, View는 Controller에게 사용자의 입력을 전달한다. Controller는 입력받은 정보를 토대로 Model을 수정한다. 수정이 반영된 내용은 View에 다시 보여지게 된다.  
+MTV패턴은 MVC패턴의 django버전이라고 생각하면 된다. Model=Model, View=Controller, Controller=Template  
+
+우리는 이중에서 View를 작성할 것이다. View를 작성하기 위해서는 생성된 앱 내에 views.py에서 작성할 수 있다.  
+
+```
+from django.shortcuts import render
+
+# Create your views here.
+```  
+
+보다시피 처음에는 아무것도 작성되어 있지 않다. 이곳에는 function-based view 혹은 class-based view를 작성할 수 있다. class-based view를 작성할 때에는 View 클래스를 상속해주어야 하며 url을 매핑할 때에는 as_view() 메소드를 사용해야 한다. 이 부분에 대해서는 URLConf에서 다루겠다. 다음과 같이 뷰를 작성해보자.  
+
+```
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views import generic
+from django.utils import timezone
+
+from .models import Question, Choice
+
+# Create your views here.
+# class-based view
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        # return Question.objects.order_by('-pub_date')[:5]
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
+# class-based view
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+# class-based view
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+
+# function-based view
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+```  
+
+위의 예제에서는 class-based view와 function-based view를 같이 쓴 views.py이다. class-based view는 제네릭 뷰를 상속받았다. 제네릭 뷰를 사용하지 않아도 상관없다. 제네릭 뷰를 사용한 이유는 많이 사용되는 뷰가 구현이 되어 있기 때문이다. 보충설명을 하자면.. (설명충 빙의중..)  
+
+- get_queryset() : 해당 메소드는 제네릭 뷰의 오버라이딩 메소드이며 리턴값은 컨텍스트로써 템플릿에 전달된다.  
+- context_object_name : get_queryset()에서 리턴값 (컨텍스트 객체)에 이름을 붙인다. 이것은 템플릿 작성에서 자세히 보겠다.  
 
 ## URLConf 설정  
+뷰를 작성했으면 url을 매핑해주어야 한다. 해당 url로 뷰를 요청해 하니까! 잔말 하지않고 바로 코드리뷰를 하겠다.  
+
+```
+from django.urls import path
+
+from . import views
+
+# 네임스페이스 설정 - html의 url 템플릿 태그에 다른 앱들과 구분하기 위해 사용된다.
+app_name = 'polls'
+
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
+    path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+
+```  
+
+app_name에 네임스페이싱을 한다. (템플릿에서 참조하기 쉽게 하려고..) 그리고 각 path()의 인자에 대해서 설명해주겠다!  
+첫 번째 인자는 url 패턴이다. 해당 패턴을 호스트 url뒤에 적어주면 해당 뷰를 요청한다.  
+두 번째 인자는 어떤 뷰를 매핑할지 적어준다. class-based view는 딱 보면 다른거 알겠쥬?  
+세 번째 뷰는 해당 path에 네임스페이싱을 한 것이다. 이 또한 템플릿에서 참조가 쉬워지는 장점이 있다.  
 
 ## DB 설정  
 
