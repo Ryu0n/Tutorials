@@ -103,6 +103,18 @@ python manage.py makemigrations --empty [앱명]
 ```  
 --empty 옵션을 주게되면 operations가 비어있는 마이그레이션 파일이 생성된다. 여기다가 직접 operations를 작성하여 migrate를 해도된다. (능력이 된다면 ㅋ)  
 
+## DB 설정  
+
+## django 프로젝트에 앱 등록  
+
+## 앱 내부에 모델 설계  
+
+## 관리자 계정 생성  
+
+## 서버 구동  
+
+## 관리자 페이지에 모델 등록  
+
 ## view 작성  
 view를 작성하기 이전에 장고의 **MTV(Model-View-Template) 패턴**에 대해 간단하게 짚고 넘어가겠다. 
 Spring 프레임워크에는 MVC(Model-View-Controller)가 있다. 여기서 View는 사용자에게 보여지는 면이라고 이해하면 쉽다. View에게 사용자의 입력이 주어지면, View는 Controller에게 사용자의 입력을 전달한다. Controller는 입력받은 정보를 토대로 Model을 수정한다. 수정이 반영된 내용은 View에 다시 보여지게 된다.  
@@ -198,14 +210,4 @@ app_name에 네임스페이싱을 한다. (템플릿에서 참조하기 쉽게 �
 두 번째 인자는 어떤 뷰를 매핑할지 적어준다. class-based view는 딱 보면 다른거 알겠쥬?  
 세 번째 뷰는 해당 path에 네임스페이싱을 한 것이다. 이 또한 템플릿에서 참조가 쉬워지는 장점이 있다.  
 
-## DB 설정  
-
-## django 프로젝트에 앱 등록  
-
-## 앱 내부에 모델 설계  
-
-## 관리자 계정 생성  
-
-## 서버 구동  
-
-## 관리자 페이지에 모델 등록  
+## templates 작성
