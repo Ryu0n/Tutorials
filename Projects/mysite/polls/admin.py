@@ -14,7 +14,7 @@ class QuestionAdmin(admin.ModelAdmin):
     # fields = ['pub_date', 'question_text']
     fieldsets = [
         ('Question information', {'fields': ['question_text']}),
-        ('Date information', {'fields': ['pub_date']})
+        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']})
     ]
     inlines = [ChoiceInline]
 
