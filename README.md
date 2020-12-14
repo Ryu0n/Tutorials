@@ -104,8 +104,33 @@ python manage.py makemigrations --empty [앱명]
 --empty 옵션을 주게되면 operations가 비어있는 마이그레이션 파일이 생성된다. 여기다가 직접 operations를 작성하여 migrate를 해도된다. (능력이 된다면 ㅋ)  
 
 ## DB 설정  
+루트 디렉터리의 setting.py를 통해 사용자가 원하는 데이터베이스를 선택할 수 있다.  
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```  
+
+django는 기본적으로 sqlite3가 내장되어 있다.  
+초기에 프로젝트를 생성하면 마이그레이트를 해주어야 한다. 사용자 테이블 등 기초적으로 필요한 테이블들을 초기화하기 위함이다.  
+
+```
+python manage.py migrate
+```  
 
 ## django 프로젝트에 앱 등록  
+django 프로젝트에서 앱만 생성했다고 끝나는 것이 아니다. 생성한 앱은 **프로젝트에 등록**을 해줘야 한다.  
+
+```
+INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
+    ...
+]
+```
 
 ## 앱 내부에 모델 설계  
 
