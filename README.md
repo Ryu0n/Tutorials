@@ -126,8 +126,40 @@ https://hello-bryan.tistory.com/114 에서 참조하자.
 ```
 
 ## 컴포넌트
+사용자 정의 태그라고 생각하면 쉽다. 대문자로 시작하며, Component 클래스를 상속한다. 구조는 다음과 같다.
+파일단위로 분리가 가능하여 재사용성을 높일 수 있으며, 가독성 또한 좋아진다.
+
+```
+class ComponentName extends Components {
+    render() {
+        return(
+            JSX Syntax..
+        );
+    }
+}
+```
 
 ## props
+컴포넌트에 속성(인자로써) 부여할 수 있다.
+Subject라는 컴포넌트가 있다고 가정한다.
+
+```
+// 호출부
+<Subject title="WEB" sub="world wide web!"></Subject>
+
+// 컴포넌트
+class Subject extends Componenet{
+    render() {
+        return (
+            // JSX Syntax, 시맨틱 태그
+            <header>
+                <h1>{this.props.title}</h1>
+                {this.props.sub}
+            </header>
+        );
+    }
+}
+```
 
 ## state
 
