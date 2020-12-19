@@ -64,3 +64,13 @@ class App extends Component {
 }
 
 export default App;
+
+
+
+// // binding
+// var obj = {name: 'ryuon'}
+// function bindTest() {
+//   console.log(this.name);
+// }
+// // bind() 리턴값 : 인자로 넣은 객체가 this로 매핑된 메소드
+// bindTest2 = bindTest().bind(obj);
