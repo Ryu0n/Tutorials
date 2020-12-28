@@ -161,7 +161,98 @@ class Subject extends Componenet{
 }
 ```
 
-## state
+## state  
+props는 (함수 매개변수처럼) 컴포넌트에 전달되는 반면 state는 (함수 내에 선언된 변수처럼) **컴포넌트 안에서** 관리된다.  
+state를 통해 컴포넌트의 상태를 지정할 수 있다. state는 **constructor**안에서 지정되어야 한다.  
+state의 값이 변경되면 해당 컴포넌트는 **새롭게 render**된다.
+
+
+```
+constructor(props){
+    
+    super(props); // React.Component의 생성자를 먼저 실행
+    // state의 값이 바뀌면 state를 가지고 있는 컴포넌트의 render() 재호출(화면이 다시 그려진다.)된다.
+    this.state = { 
+      mode:'read',
+      subject: {title: 'WEB', sub:'World Wide Web!'},
+      welcome:{title:'Welcome', desc:'Hello, React!'},
+      contents: [
+        {id: 1, title: 'HTML', desc: 'HTML is HyperText ...'},
+        {id: 2, title: 'CSS', desc: 'CSS if for design'},
+        {id: 3, title: 'JavaScript', desc: 'JavaScript is for interactive'},
+      ]
+    }
+  }
+```
+
+## state의 참조
+props를 참조하듯 this(해당 컴포넌트)의 state를 참조하면 된다.  
+
+```
+render() {
+    var _title, _desc = null;
+    if (this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read'){
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
+```
+
+## setState
+setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을 변경해봤자 의미가 없다.
+
+```
+    return (
+      <div className="App">
+        <header>
+          <h1><a href="/" onClick={
+            function(e){
+              console.log(e);
+              e.preventDefault() 
+              this.setState({
+                'mode': 'welcome'
+              });
+            }.bind(this) // onClick 콜백 메소드에서 this 키워드(해당 컴포넌트)를 참조할 수 있도록 바인딩
+          }>{this.state.subject.title}</a></h1>
+```  
+
+여기서 리팩토링을 더 해보면..  
+
+```
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub}
+          onChangePage={function(){
+            this.setState({'mode': 'welcome'});
+            }.bind(this)}>
+        </Subject>
+```
+
+onChangePage라는 이벤트를 Subject컴포넌트에 props로 넘기고..  
+
+```
+import React, { Component } from 'react'
+
+class Subject extends Component {
+    render(){
+      return (
+        <header>
+          <h1><a href="/" onClick={function(e){
+            e.preventDefault();
+            this.props.onChangePage();
+          }.bind(this)}>{this.props.title}</a></h1>
+          {this.props.sub}    
+        </header>
+      );
+    }
+  }
+
+  export default Subject;
+```
+
+props의 onChangePage속성을 onClick funtion에 주입해주면 된다.
 
 ## key
 

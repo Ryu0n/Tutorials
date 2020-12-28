@@ -9,7 +9,8 @@ import './App.css';
 // class-type
 class App extends Component {
   constructor(props){
-    super(props);
+    super(props); // React.Component의 생성자를 먼저 실행
+    
     // state의 값이 바뀌면 state를 가지고 있는 컴포넌트의 render() 재호출(화면이 다시 그려진다.)된다.
     this.state = { 
       mode:'read',
@@ -35,12 +36,8 @@ class App extends Component {
 
     return (
       <div className="App">
-        {/* <Subject 
-          title={this.state.subject.title} 
-          sub={this.state.subject.sub}>
-        </Subject> */}
-        <header>
-          {/* onclick 은 javascript, onClick은 JSX */}
+
+        {/* <header>
           <h1><a href="/" onClick={
             function(e){
               // onclick 속성의 callback이 호출되면 이벤트의 기본적인 동작(href(/)로 리다이렉트)을 수행한다.
@@ -55,7 +52,15 @@ class App extends Component {
             }.bind(this) // onClick 콜백 메소드에서 this 키워드를 참조할 수 있도록 바인딩
           }>{this.state.subject.title}</a></h1>
           {this.state.subject.sub}    
-        </header>
+        </header> */}
+        
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub}
+          onChangePage={function(){
+            this.setState({'mode': 'welcome'});
+            }.bind(this)}>
+        </Subject>
         <TOC data={this.state.contents}></TOC>
         <Content title={_title} desc={_desc}></Content>
       </div>
