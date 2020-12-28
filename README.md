@@ -135,8 +135,24 @@ INSTALLED_APPS = [
 ## 앱 내부에 모델 설계  
 
 ## 관리자 계정 생성  
+관리자 계정을 생성하기 위해 최초로 django서버에 필요한 기본 테이블들을 초기화시켜야 한다.
+
+```
+python manage.py migrate
+```
+
+여러 테이블들이 자동으로 생성된 뒤에 관리자 계정을 생성하는 명령어를 실행한다.
+
+```
+python manage.py createsuperuser
+```
 
 ## 서버 구동  
+서버를 구동할 때에는 manage.py 인터페이스를 통해 실행한다.
+
+```
+python manage.py runserver [IP 주소][PORT 번호]
+```
 
 ## 관리자 페이지에 모델 등록  
 
