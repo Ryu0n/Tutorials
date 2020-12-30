@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Subject from './components/Subject'
 import TOC from './components/TOC';
 import Content from './components/Content';
+import Counter from './components/example';
 
 import './App.css';
 
@@ -53,6 +54,8 @@ class App extends Component {
           }>{this.state.subject.title}</a></h1>
           {this.state.subject.sub}    
         </header> */}
+
+        <Counter></Counter>
 
         <Subject 
           title={this.state.subject.title} 
