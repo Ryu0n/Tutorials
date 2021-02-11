@@ -212,7 +212,7 @@ setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을
               console.log(e);
               e.preventDefault() 
               this.setState({
-                'mode': 'welcome'
+                mode: 'welcome'
               });
             }.bind(this) // onClick 콜백 메소드에서 this 키워드(해당 컴포넌트)를 참조할 수 있도록 바인딩
           }>{this.state.subject.title}</a></h1>
@@ -225,7 +225,7 @@ setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을
           title={this.state.subject.title} 
           sub={this.state.subject.sub}
           onChangePage={function(){
-            this.setState({'mode': 'welcome'});
+            this.setState({mode: 'welcome'});
             }.bind(this)}>
         </Subject>
 ```
@@ -256,4 +256,153 @@ props의 onChangePage속성을 onClick funtion에 주입해주면 된다.
 
 ## key  
 App.js의 state에 TOC.js에 표현할 콘텐츠들을 담고 해당 콘텐츠들을 props로 전달하였다. 이때 각 콘텐츠들을 li 태그를 사용하여 표현할 때, 리액트에서 자체적으로 각 항목들을 구분하기 위한 key라는 속성을 요구한다. 
+
 ## event & debugger
+우리는 TOC 컴포넌트에서 3개의 항목중에서 클릭한 항목에 대한 내용을 Subject 컴포넌트에 띄우는 것이 목적이다. 큰 맥락을 앞서 설명하자면 TOC 컴포넌트를 클릭했을 때 발생한 이벤트 객체로부터 선택한 항목의 ID를 받아와 해당 항목에 대한 내용을 가져오는 것이 목적이다. 우선 코드부터 수정해보자.  
+
+```
+  this.state = { 
+    mode:'read',
+    selected_content_id: 2,
+    subject: {title: 'WEB', sub:'World Wide Web!'},
+    welcome:{title:'Welcome', desc:'Hello, React!'},
+    contents: [
+      {id: 1, title: 'HTML', desc: 'HTML is HyperText ...'},
+      {id: 2, title: 'CSS', desc: 'CSS if for design'},
+      {id: 3, title: 'JavaScript', desc: 'JavaScript is for interactive'},
+    ]
+  }
+```  
+state에 현재 선택된 항목의 ID를 나타내는 속성인 selected_content_id를 정의하자.  
+
+```
+render() {
+  var _title, _desc = null;
+  if (this.state.mode === 'welcome'){
+    _title = this.state.welcome.title;
+    _desc = this.state.welcome.desc;
+  } else if (this.state.mode === 'read'){
+    var i = 0;
+    while (i < this.state.contents.length){
+      var data = this.state.contents[i];
+      if (data.id === this.state.selected_content_id){
+        _title = data.title;
+        _desc = data.desc;
+        break;
+      }  
+      i += 1;
+    }
+  }
+
+  ...
+  
+  <TOC 
+    data={this.state.contents} 
+    onChangePage={function(){
+      this.setState({mode: 'read'});
+    }.bind(this)}>
+  </TOC>
+  
+  ...
+```  
+그리고 TOC의 항목을 클릭하게 되면 state의 mode속성이 read로 변하는 것을 알 수 있으므로 위와 같이 코드를 변경할 수 있다. 그러나 지금은 selected_content_id가 2번으로 고정되어 있기 때문에 어떠한 항목을 선택해도 2번 ID의 CSS의 내용만 나올것이다. 고로 우리는 3가지 항목중 클릭 이벤트로부터 해당 항목에 대한 ID를 얻어내어 selected_content_id를 변경해주어야 한다.  
+
+```
+  <TOC 
+    data={this.state.contents} 
+    onChangePage={function(){
+      this.setState(
+        {mode: 'read',
+        this.state.selected_content_id: // 해당 항목에 대한 ID가 들어갈 자리}
+        );
+    }.bind(this)}>
+  </TOC>
+```  
+
+```
+// TOC.js
+      ...
+      while(i < data.length){
+        lists.push(<li key={data[i].id}>
+          <a href={"/content/"+data[i].id} 
+          data-id={data[i].id}
+          onClick={
+            function(e){
+              e.preventDefault();
+              this.props.onChangePage();
+            }.bind(this)}>
+            {data[i].title}
+          </a>
+        </li>);
+        i = i + 1;
+      }
+      ...
+```  
+우선 각 a태그(각 항목)에 data-id 속성을 부여하자.  
+
+![image](https://user-images.githubusercontent.com/32003817/107636346-d5faeb80-6caf-11eb-898c-dfc84cd6b804.png)
+이제 이벤트를 발생시켜보자. 항목을 클릭한 후 크롬의 검사탭에서 esc를 누르면 콘솔창이 나오는데 debugger;가 써있는 곳에서 breakpoint로 걸린다. 콘솔창에 이벤트 객체 변수명인 e를 쳐보면 다음과 같이 나온다. 이벤트 객체의 속성중에 가장 중요한 target이 보일것이다. 여기에는 클릭된 태그가 나온다. (여기서는 a태그가 나온다.)  
+
+![image](https://user-images.githubusercontent.com/32003817/107636686-56b9e780-6cb0-11eb-817b-9f23eec46c08.png)
+이어서 해당 target의 속성을 보면 dataset속성에 id속성이 있을것이다. 아까 우리가 data를 접두사로 붙인 data-id속성이다.  
+
+```
+TOC.js 
+      ...
+      while(i < data.length){
+        lists.push(<li key={data[i].id}>
+          <a href={"/content/"+data[i].id} 
+          data-id={data[i].id} // data는 접두사로써 실제로는 id 속성으로 접근한다. data-id2일 경우 id2로 접근
+          onClick={
+            function(e){
+              e.preventDefault();
+              this.props.onChangePage(e.target.dataset.id); // 이곳에 클릭된 항목의 ID를 인자로 넣어주자.
+            }.bind(this)}>
+            {data[i].title}
+          </a>
+        </li>);
+        ...
+```
+this.props.onChangePage 콜백 함수의 인자에 클릭된 항목의 ID를 인자로 넣어주면 된다. 왜냐하면 onChangePage속성은 App.js에서 state를 세팅하는 함수를 props로써 넘긴 것이기 때문이다. 그럼 이제 넘겨주었으니 받아서 selected_content_id를 세팅해보자.  
+
+```
+        <TOC 
+          data={this.state.contents} 
+          onChangePage={function(id){
+            debugger;
+            this.setState(
+              {mode: 'read',
+              selected_content_id: id}
+              );
+          }.bind(this)}>
+        </TOC>
+```  
+![image](https://user-images.githubusercontent.com/32003817/107638243-a4375400-6cb2-11eb-84b5-c9672e97e9e5.png)
+디버거를 찍어봤는데 정상적으로 인자부분에 ID가 넘어오는 것은 확인이 되지만 내용이 변하지 않는 것을 알 수 있다. 그것은 넘어오는 인자값이 **문자**이기 때문이다. 그래서 Number()를 사용하여 타입을 숫자로 캐스팅해야한다.  
+
+```
+        <TOC 
+          data={this.state.contents} 
+          onChangePage={function(id){
+            this.setState(
+              {mode: 'read',
+              selected_content_id: Number(id)}
+              );
+          }.bind(this)}>
+        </TOC>
+```  
+
+추가로 설명을 덧붙이자면, TOC.js에서 data-id 속성을 통해 각 항목의 ID를 얻어왔다. 하지만 이렇게 하지 않는 방법이 있다. 그것은 bind()를 이용하는 방법이다.  
+
+```
+          <a href={"/content/"+data[i].id} 
+          onClick={
+            function(id, num, e){
+              e.preventDefault();
+              this.props.onChangePage(e.target.dataset.id); // 이곳에 클릭된 항목의 ID를 인자로 넣어주자.
+            }.bind(this, data[i].id, 10)}>
+```  
+bind의 this인자 이후로 다른 값들을 파라미터로 넘기게 되면 바인딩되고 있는 함수의 첫번째 인자부터 차곡차곡 들어온다. 마지막 인자는 반드시 이벤트 객체(e)이다.  
+(data[i].id -> id, 10 -> num)  
+
+## 베이스 캠프
