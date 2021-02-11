@@ -392,7 +392,7 @@ this.props.onChangePage 콜백 함수의 인자에 클릭된 항목의 ID를 인
         </TOC>
 ```  
 
-* 꿀팁
+* 꿀팁  
 추가로 설명을 덧붙이자면, TOC.js에서 data-id 속성을 통해 각 항목의 ID를 얻어왔다. 하지만 이렇게 하지 않는 방법이 있다. 그것은 bind()를 이용하는 방법이다.  
 ```
           <a href={"/content/"+data[i].id} 
