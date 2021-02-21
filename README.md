@@ -537,5 +537,4 @@ e.target[0 ~ 2]를 통해 form 태그 안의 각 태그들을을 참조하는 �
 
 ![image](https://user-images.githubusercontent.com/32003817/108626587-32ba8b00-7494-11eb-99e0-89392d71c15a.png)
 ![image](https://user-images.githubusercontent.com/32003817/108626750-1c60ff00-7495-11eb-8635-6827ca9bcf53.png)
-![image](https://user-images.githubusercontent.com/32003817/108626641-8a58f680-7494-11eb-8a43-318f644ed28c.png)
 e.target.title / e.target.desc를 통해 참조하는 방법
