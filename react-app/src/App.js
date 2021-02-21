@@ -51,7 +51,11 @@ class App extends Component {
     } else if (this.state.mode === 'create'){  // create state
       _article = 
       <CreateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);
         // setState를 통해 새로운 Content를 추가시키면 된다.
+        // this.setState(
+        //   {}
+        // );
       }.bind(this)}>
       </CreateContent>
     }

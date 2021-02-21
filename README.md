@@ -511,6 +511,10 @@ App.js
 이번 시간에는 CreateContent.js의 form 태그를 구현해볼 것이다.  
 ```
 ...
+CreateContent.js
+
+...
+
             <form action="create_process" method="post" onSubmit={function(e){
               e.preventDefault();
               alert("Submit!");
@@ -525,6 +529,8 @@ App.js
                 <input type="submit"></input>
               </p>
             </form>
+
+...
 ...            
 ```
 간단히 설명하자면 이 코드는 React의 기능을 사용한 것이 아닌 HTML의 native한 기능들로 구현한 것이다. form 태그의 action 속성은 form안의 내용들을 전송할 위치를 의미한다. method 속성은 어떠한 HTML method (GET, POST, PUT, PATCH, DELETE ...)를 사용할 것인지 정하고 onSubmit 속성은 form 태그 내부에서 submit 타입의 input이 발생했을 때 나타나는 이벤트이다. e.preventDefault() 를 통해 action 의 속성값인 create_process 위치로 이동하는 것을 막았다. 
@@ -537,4 +543,42 @@ e.target[0 ~ 2]를 통해 form 태그 안의 각 태그들을을 참조하는 �
 
 ![image](https://user-images.githubusercontent.com/32003817/108626587-32ba8b00-7494-11eb-99e0-89392d71c15a.png)
 ![image](https://user-images.githubusercontent.com/32003817/108626750-1c60ff00-7495-11eb-8635-6827ca9bcf53.png)
-e.target.title / e.target.desc를 통해 참조하는 방법
+e.target.title / e.target.desc를 통해 참조하는 방법  
+
+```
+CreateContent.js
+...
+
+            <form action="create_process" method="post" onSubmit={function(e){
+              e.preventDefault();
+              this.props.onSubmit(
+                e.target.title.value,
+                e.target.desc.value
+              );
+              alert("Submit!");
+            }.bind(this)}>
+
+...
+```  
+
+form 태그에서 제출을 할경우 onSubmit 속성의 이벤트 핸들러가 동작한다. 이때 App.js에서 props로 넘긴 this.props.onSubmit()이 실행된다. App.js를 살펴보자.  
+
+```
+App.js
+
+...
+
+      <CreateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        // setState를 통해 새로운 Content를 추가시키면 된다.
+        // this.setState(
+        //   {}
+        // );
+      }.bind(this)}>
+      </CreateContent>
+
+...
+```
+e.target.title.value와 e.target.desc.value값이 CreateContent 컴포넌트의 onSubmit 이벤트 핸들러의 인자(_title, _desc)로 전달되어 출력이 되는 것을 확인할 수 있다.
+
+## Create 구현 - 5
