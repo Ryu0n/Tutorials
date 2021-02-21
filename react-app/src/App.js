@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import Subject from './components/Subject'
 import TOC from './components/TOC';
 import Content from './components/Content';
-import Counter from './components/example';
+import Control from './components/Control'
+// import Counter from './components/example';
 
 import './App.css';
 
@@ -64,7 +65,7 @@ class App extends Component {
           {this.state.subject.sub}    
         </header> */}
 
-        <Counter></Counter>
+        {/* <Counter></Counter> */}
 
         <Subject 
           title={this.state.subject.title} 
@@ -82,6 +83,11 @@ class App extends Component {
               );
           }.bind(this)}>
         </TOC>
+        <Control onChangeMode={function(mode){
+          this.setState(
+            {mode: mode}
+          )
+        }.bind(this)}></Control>
         <Content title={_title} desc={_desc}></Content>
       </div>
     );

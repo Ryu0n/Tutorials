@@ -413,4 +413,59 @@ props는 read-only 성질이 있기 때문에 넘겨주는 쪽에서 수정해�
 - 한줄 요약  
 상위 컴포넌트에 하위 컴포넌트에 영향을 줄 때에는 **props**를 통해서 하위 컴포넌트의 state에 영향을 준다. 반면, 하위 컴포넌트가 상위 컴포넌트에 영향을 주고 싶을 때에는 **이벤트**를 발생시킨다.  
 
-## Create 구현
+## Create 구현 - 1
+우리는 create, update, delete의 state를 변경하기 위한 버튼들을 만들어야 한다.  
+```
+        <ul>
+          <li><a href="/create">create</a></li>
+          <li><a href="/update">update</a></li>
+          <li><input type="button" value="delete"></input></li>
+        </ul>
+```  
+다만, delete같은 경우에는 링크를 통해 접근하는 방식을 지양해야 한다. 왜나하면, 해당 링크가 노출될 경우 사용자가 삭제하려는 데이터 이외의 다른 서버의 데이터를 마음대로 삭제할 수 있기 때문이다. 그래서 반드시 다른 데이터에는 접근하지 못하도록 input 태그를 사용하는 것이 적합하다. 그리고 위의 내용을 Control.js 컴포넌트로 분리시켜준다.  
+
+```
+Control.js
+
+import React, { Component } from 'react'
+
+class Control extends Component {
+    render(){
+      return (
+        <ul>
+          <li><a href="/create" onClick={
+            function(e){
+              e.preventDefault();
+              this.props.onChangeMode('create');  // onChangeMode 핸들러 실행
+            }.bind(this)
+          }>create</a></li>
+          <li><a href="/update" onClick={
+            function(e){
+              e.preventDefault();
+              this.props.onChangeMode('update ');  // onChangeMode 핸들러 실행
+            }.bind(this)
+          }>update</a></li>
+          <li><input onClick={
+            function(e){
+              e.preventDefault();
+              this.props.onChangeMode('delete');  // onChangeMode 핸들러 실행
+            }.bind(this)
+          } type="button" value="delete" ></input></li>
+        </ul>
+      );
+    }
+  }
+
+  export default Control;
+
+```  
+
+```
+App.js
+
+        <Control onChangeMode={function(mode){  // Control.js의 onClick속성에서 핸들러에 넘긴 mode인자 'create', 'update', 'delete'
+          this.setState(
+            {mode: mode}
+          )
+        }.bind(this)}></Control>
+```  
