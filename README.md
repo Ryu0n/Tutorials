@@ -508,3 +508,25 @@ App.js
 ```
 
 ## Create 구현 - 3
+이번 시간에는 CreateContent.js의 form 태그를 구현해볼 것이다.  
+```
+...
+            <form action="create_process" method="post" onSubmit={function(e){
+              e.preventDefault();
+              alert("Submit!");
+            }.bind(this)}>
+              <p>
+                <input type="text" name="title" placeholder="title"></input>
+              </p>
+              <p>
+                <textarea name="desc" placeholder="description"></textarea>
+              </p>
+              <p>
+                <input type="submit"></input>
+              </p>
+            </form>
+...            
+```
+간단히 설명하자면 이 코드는 React의 기능을 사용한 것이 아닌 HTML의 native한 기능들로 구현한 것이다. form 태그의 action 속성은 form안의 내용들을 전송할 위치를 의미한다. method 속성은 어떠한 HTML method (GET, POST, PUT, PATCH, DELETE ...)를 사용할 것인지 정하고 onSubmit 속성은 form 태그 내부에서 submit 타입의 input이 발생했을 때 나타나는 이벤트이다. e.preventDefault() 를 통해 action 의 속성값인 create_process 위치로 이동하는 것을 막았다. 
+
+## Create 구현 - 4
