@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import Subject from './components/Subject'
 import TOC from './components/TOC';
-import Content from './components/Content';
+import ReadContent from './components/ReadContent';
+import CreateContent from './components/CreateContent';
 import Control from './components/Control'
 // import Counter from './components/example';
 
@@ -28,11 +29,13 @@ class App extends Component {
   }
 
   render() {
-    var _title, _desc = null;
-    if (this.state.mode === 'welcome'){
+    var _title, _desc, _article = null;  // aritcle 변수 선언
+    if (this.state.mode === 'welcome'){  // welcome state
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
-    } else if (this.state.mode === 'read'){
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'read'){  // read state
       var i = 0;
       while (i < this.state.contents.length){
         var data = this.state.contents[i];
@@ -43,6 +46,10 @@ class App extends Component {
         }  
         i += 1;
       }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'create'){  // create state
+      _article = <CreateContent></CreateContent>
     }
 
     return (
@@ -88,7 +95,7 @@ class App extends Component {
             {mode: mode}
           )
         }.bind(this)}></Control>
-        <Content title={_title} desc={_desc}></Content>
+        {_article}  {/* 해당 위치는 가변적으로 Content 컴포넌트를 받을 것이기 때문에 var _article 변수 처리 */}
       </div>
     );
   }

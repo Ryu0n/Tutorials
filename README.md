@@ -469,3 +469,42 @@ App.js
           )
         }.bind(this)}></Control>
 ```  
+
+
+## Create 구현 - 2
+우선 state가 welcome일 때와 read상태일 때는 기존에 사용하던 Content 컴포넌트가 나오고, 나머지 상태 (create, update, delete) 상태에서는 각 상태에 적합한 Content 컴포넌트를 출력하기를 원한다. 그래서 기존의 Content 컴포넌트를 ReadContent로 바꾼다. 그리고, Content가 들어가는 부분을 _article이라는 변수로 처리한다.  
+
+```
+App.js
+
+  render() {
+    var _title, _desc, _article = null;  // aritcle 변수 선언
+    if (this.state.mode === 'welcome'){  // welcome state
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'read'){  // read state
+      var i = 0;
+      while (i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if (data.id === this.state.selected_content_id){
+          _title = data.title;
+          _desc = data.desc;
+          break;
+        }  
+        i += 1;
+      }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'create'){  // create state
+      _article = <CreateContent></CreateContent>
+    }
+
+    return (
+      ...
+        {_article}  {/* 해당 위치는 가변적으로 Content 컴포넌트를 받을 것이기 때문에 var _article 변수를 통해 동적으로 처리 */}
+      ...
+```
+
+## Create 구현 - 3
