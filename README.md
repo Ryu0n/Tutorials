@@ -530,3 +530,12 @@ App.js
 간단히 설명하자면 이 코드는 React의 기능을 사용한 것이 아닌 HTML의 native한 기능들로 구현한 것이다. form 태그의 action 속성은 form안의 내용들을 전송할 위치를 의미한다. method 속성은 어떠한 HTML method (GET, POST, PUT, PATCH, DELETE ...)를 사용할 것인지 정하고 onSubmit 속성은 form 태그 내부에서 submit 타입의 input이 발생했을 때 나타나는 이벤트이다. e.preventDefault() 를 통해 action 의 속성값인 create_process 위치로 이동하는 것을 막았다. 
 
 ## Create 구현 - 4
+이번 시간에는 Create 한 내용을 Content에 추가시키는 작업을 할 것이다. 우선 submit을 하였을 때, 이벤트 객체로부터 title과 description을 얻어와야 한다.  
+![image](https://user-images.githubusercontent.com/32003817/108626504-d9525c00-7493-11eb-9e92-a3cfd52c544e.png)
+![image](https://user-images.githubusercontent.com/32003817/108626687-cf7d2880-7494-11eb-9ab1-e24a86499890.png)
+e.target[0 ~ 2]를 통해 form 태그 안의 각 태그들을을 참조하는 방법  
+
+![image](https://user-images.githubusercontent.com/32003817/108626587-32ba8b00-7494-11eb-99e0-89392d71c15a.png)
+![image](https://user-images.githubusercontent.com/32003817/108626750-1c60ff00-7495-11eb-8635-6827ca9bcf53.png)
+![image](https://user-images.githubusercontent.com/32003817/108626641-8a58f680-7494-11eb-8a43-318f644ed28c.png)
+e.target.title / e.target.desc를 통해 참조하는 방법
