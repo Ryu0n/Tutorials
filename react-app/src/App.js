@@ -14,6 +14,7 @@ class App extends Component {
   constructor(props){
     super(props); // React.Component의 생성자를 먼저 실행
     
+    this.max_content_id = 3;
     // state의 값이 바뀌면 state를 가지고 있는 컴포넌트의 render() 재호출(화면이 다시 그려진다.)된다.
     this.state = { 
       mode:'read',
@@ -51,11 +52,11 @@ class App extends Component {
     } else if (this.state.mode === 'create'){  // create state
       _article = 
       <CreateContent onSubmit={function(_title, _desc){
-        console.log(_title, _desc);
-        // setState를 통해 새로운 Content를 추가시키면 된다.
-        // this.setState(
-        //   {}
-        // );
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        this.state.contents.push(new_content);
+        this.setState({contents: this.state.contents})
       }.bind(this)}>
       </CreateContent>
     }
