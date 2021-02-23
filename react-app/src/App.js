@@ -55,8 +55,10 @@ class App extends Component {
         console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
         this.max_content_id += 1;
         var new_content = {id: this.max_content_id, title: _title, desc: _desc};
-        this.state.contents.push(new_content);
-        this.setState({contents: this.state.contents})
+        // this.state.contents.push(new_content);
+        // this.setState({contents: this.state.contents})
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
       }.bind(this)}>
       </CreateContent>
     }

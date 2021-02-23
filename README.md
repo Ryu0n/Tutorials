@@ -610,4 +610,16 @@ App.js
       </CreateContent>
 ...      
 ```
-새로 추가할 콘텐츠의 id를 증가시킨 후 새로운 콘텐츠의 내용을 push한 상태를 setState해주어야 최종적으로 반영된다. 하지만 이 방법은 좋지 않기 때문에 concat으로 대체할 것이다.
+새로 추가할 콘텐츠의 id를 증가시킨 후 새로운 콘텐츠의 내용을 push한 상태를 setState해주어야 최종적으로 반영된다. 하지만 push를 사용한 방법은 원본을 바꾸기 때문에 concat으로 대체할 것이다.  
+
+![image](https://user-images.githubusercontent.com/32003817/108791136-b4f49d80-75c1-11eb-86db-c6aa52717b25.png)
+push는 위와 같이 arr배열을 직접 값을 추가하는 반면 concat은 값이 추가된 새로운 배열을 반환하기 때문에 원본에 영향을 주지않는다.  
+
+```
+App.js 
+
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
+```
+이를 적용하면 새로운 콘텐츠가 추가된 또다른 배열인 _contents를 setState() 해주면 된다. 이렇게 할 경우 원본을 직접 영향을 주지 않기 때문에 (내 추측이지만.. undo가 가능할 것이라..) 퍼포먼스가 높아진다고 한다.
