@@ -582,3 +582,32 @@ App.js
 e.target.title.value와 e.target.desc.value값이 CreateContent 컴포넌트의 onSubmit 이벤트 핸들러의 인자(_title, _desc)로 전달되어 출력이 되는 것을 확인할 수 있다.
 
 ## Create 구현 - 5
+이번 시간에 우리는 제출했을 때 발생한 onSubmit 이벤트로부터 _title, _desc 값을 state에 추가시켜 반영할 것이다.  
+
+```
+App.js
+
+class App extends Component {
+  constructor(props){
+    super(props); // React.Component의 생성자를 먼저 실행
+    
+    this.max_content_id = 3;
+    ...
+```
+새로 추가할 콘텐츠의 id를 미리 정의한다.  
+
+```
+App.js
+
+...
+      <CreateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        this.state.contents.push(new_content);
+        this.setState({contents: this.state.contents})
+      }.bind(this)}>
+      </CreateContent>
+...      
+```
+새로 추가할 콘텐츠의 id를 증가시킨 후 새로운 콘텐츠의 내용을 push한 상태를 setState해주어야 최종적으로 반영된다. 하지만 이 방법은 좋지 않기 때문에 concat으로 대체할 것이다.
