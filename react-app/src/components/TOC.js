@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 
 // Table Of Content
 class TOC extends Component {
+    // interface ComponentLifeCycle
+    // shouldComponentUpdate?(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean;
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      var prevContents = this.props.data;
+      var nextContents = nextProps.data;
+    }
     render() {
       var lists = [];
       var data = this.props.data;

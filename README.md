@@ -623,3 +623,27 @@ App.js
         this.setState({contents: _contents});
 ```
 이를 적용하면 새로운 콘텐츠가 추가된 또다른 배열인 _contents를 setState() 해주면 된다. 이렇게 할 경우 원본을 직접 영향을 주지 않기 때문에 (내 추측이지만.. undo가 가능할 것이라..) 퍼포먼스가 높아진다고 한다.
+
+## Create 구현 - 6
+state의 상태가 바뀌면 하위 컴포넌트들이 전부 다시 렌더링 되는 것은 알고있을 것이다. 그러나, TOC같은 경우에는 표시할 데이터가 줄거나 늘지 않는 이상 다시 렌더링 될 필요가 없다. (다시 렌더링을 할 경우 규모가 큰 프로젝트에서는 퍼포먼스가 떨어짐) 그래서 이를 해결하기위해 **shouldComponentUpdate**에 대해서 알아볼 것이다.  
+
+shouldComponentUpdate() 메소드는 ComponentLifeCycle 인터페이스로부터 구현되야 하는 멤버이다. 그리고, nextProps, nextState, nextContent를 인자로 받고 boolean타입을 반환한다. 이중 우리가 다룰 내용은 nextProps와 nextState인데 이것들이 의미하는 바는 상태가 변한 이후의 props와 state를 의미한다. 그리고 True를 반환할 경우 render() 메소드를 호출하지만 False를 반환한 경우 render() 메소드를 호출하지 않는다. 즉, 우리는 이전상태와 최신상태의 내용을 비교하여 렌더링을 할지 말지 결정할 수 있다.  
+
+정리하자면 shouldComponentUpdate는 다음과 같은 특징을 지닌다.  
+* render() 메소드 이전에 호출된다.
+* 새로운 props와 state를 얻을 수 있다.
+* render() 메소드 호출 여부를 결정할 수 있다.  
+
+```
+TOC.js
+
+class TOC extends Component {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      var prevContents = this.props.data;
+      var nextContents = nextProps.data;
+    }
+
+    render() { ... }
+    ...
+```
+this.props.data를 통해 이전 상태의 콘텐츠들과 nextProps.data를 통해 새로운 상태의 콘텐츠들을 들고왔다. 이들을 비교하여 렌더링 여부를 결정하면 된다.
