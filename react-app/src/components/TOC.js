@@ -5,10 +5,17 @@ class TOC extends Component {
     // interface ComponentLifeCycle
     // shouldComponentUpdate?(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean;
     shouldComponentUpdate(nextProps, nextState, nextContext) {
+      console.log('shouldComponentUpdate');
       var prevContents = this.props.data;
       var nextContents = nextProps.data;
+      console.log(prevContents, nextContents)
+      if(prevContents === nextContents){
+        return false;
+      }
+      return true;
     }
     render() {
+      console.log('Im rendered');
       var lists = [];
       var data = this.props.data;
       var i = 0;

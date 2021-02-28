@@ -43,7 +43,7 @@ npm run start
 
 해당 태그 안에 컴포넌트(사용자 정의 태그)가 들어간다. 그것을 어떻게 알까? index.js파일을 보면 알 수 있다. 
 
-```
+```javascript
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -55,13 +55,13 @@ ReactDOM.render(
 무언가 이상하지 않은가? JavaScript문법 안에 HTML태그가 들어가 있다. 이것은 React의 **JSX**라는 문법이다. (유사 HTML)
 root 태그에 App 태그를 렌더한다. 다음으로 App 태그를 살펴보자.
 
-```
+```javascript
 import App from './App';
 ```
 
 './App'는 App.js를 의미한다. App.js 스크립트의 App 모듈을 살펴보자.
 
-```
+```javascript
 function App() {
   return (
     <div className="App">
@@ -91,7 +91,7 @@ export default App;
 ## CSS
 index.js 의 import './index.css'를 보자.
 
-```
+```css
 // body 태그에 적용
 body {
   margin: 0;
@@ -117,7 +117,7 @@ https://hello-bryan.tistory.com/114 에서 참조하자.
 
 ## 시맨틱 태그
 특별한 의미는 없지만, 해당 태그가 어떤 영역임을 의미있게 표시한다.  
-```
+```jsx
 <body>
     <header></header>
     <nav></nav>
@@ -129,7 +129,7 @@ https://hello-bryan.tistory.com/114 에서 참조하자.
 사용자 정의 태그라고 생각하면 쉽다. 대문자로 시작하며, Component 클래스를 상속한다. 구조는 다음과 같다.
 파일단위로 분리가 가능하여 재사용성을 높일 수 있으며, 가독성 또한 좋아진다.
 
-```
+```javascript
 class ComponentName extends Components {
     render() {
         return(
@@ -143,7 +143,7 @@ class ComponentName extends Components {
 컴포넌트에 속성(인자로써) 부여할 수 있다.
 Subject라는 컴포넌트가 있다고 가정한다.
 
-```
+```javascript
 // 호출부
 <Subject title="WEB" sub="world wide web!"></Subject>
 
@@ -167,7 +167,9 @@ state를 통해 컴포넌트의 상태를 지정할 수 있다. state는 **const
 state의 값이 변경되면 해당 컴포넌트는 **새롭게 render**된다.
 
 
-```
+```javascript
+// App.js
+
 constructor(props){
     
     super(props); // React.Component의 생성자를 먼저 실행
@@ -188,7 +190,9 @@ constructor(props){
 ## state의 참조
 props를 참조하듯 this(해당 컴포넌트)의 state를 참조하면 된다.  
 
-```
+```javascript
+// App.js
+
 render() {
     var _title, _desc = null;
     if (this.state.mode === 'welcome'){
@@ -203,7 +207,9 @@ render() {
 ## setState
 setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을 변경해봤자 의미가 없다.
 
-```
+```javascript
+// App.js
+
     return (
       <div className="App">
         <header>
@@ -220,7 +226,9 @@ setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을
 
 여기서 리팩토링을 더 해보면..  
 
-```
+```javascript
+// App.js
+
         <Subject 
           title={this.state.subject.title} 
           sub={this.state.subject.sub}
@@ -232,7 +240,9 @@ setState()는 state의 값을 변경할 때 사용된다. 직접 state의 값을
 
 onChangePage라는 이벤트를 Subject컴포넌트에 props로 넘기고..  
 
-```
+```javascript
+// Subject.js
+
 import React, { Component } from 'react'
 
 class Subject extends Component {
@@ -260,7 +270,9 @@ App.js의 state에 TOC.js에 표현할 콘텐츠들을 담고 해당 콘텐츠�
 ## event & debugger
 우리는 TOC 컴포넌트에서 3개의 항목중에서 클릭한 항목에 대한 내용을 Subject 컴포넌트에 띄우는 것이 목적이다. 큰 맥락을 앞서 설명하자면 TOC 컴포넌트를 클릭했을 때 발생한 이벤트 객체로부터 선택한 항목의 ID를 받아와 해당 항목에 대한 내용을 가져오는 것이 목적이다. 우선 코드부터 수정해보자.  
 
-```
+```javascript
+// App.js
+
   this.state = { 
     mode:'read',
     selected_content_id: 2,
@@ -275,7 +287,9 @@ App.js의 state에 TOC.js에 표현할 콘텐츠들을 담고 해당 콘텐츠�
 ```  
 state에 현재 선택된 항목의 ID를 나타내는 속성인 selected_content_id를 정의하자.  
 
-```
+```javascript
+// App.js
+
 render() {
   var _title, _desc = null;
   if (this.state.mode === 'welcome'){
@@ -307,7 +321,9 @@ render() {
 ```  
 그리고 TOC의 항목을 클릭하게 되면 state의 mode속성이 read로 변하는 것을 알 수 있으므로 위와 같이 코드를 변경할 수 있다. 그러나 지금은 selected_content_id가 2번으로 고정되어 있기 때문에 어떠한 항목을 선택해도 2번 ID의 CSS의 내용만 나올것이다. 고로 우리는 3가지 항목중 클릭 이벤트로부터 해당 항목에 대한 ID를 얻어내어 selected_content_id를 변경해주어야 한다.  
 
-```
+```javascript
+// App.js
+
   <TOC 
     data={this.state.contents} 
     onChangePage={function(){
@@ -319,7 +335,7 @@ render() {
   </TOC>
 ```  
 
-```
+```javascript
 // TOC.js
       ...
       while(i < data.length){
@@ -346,8 +362,8 @@ render() {
 ![image](https://user-images.githubusercontent.com/32003817/107636686-56b9e780-6cb0-11eb-817b-9f23eec46c08.png)
 이어서 해당 target의 속성을 보면 dataset속성에 id속성이 있을것이다. 아까 우리가 data를 접두사로 붙인 data-id속성이다.  
 
-```
-TOC.js 
+```javascript
+// TOC.js 
       ...
       while(i < data.length){
         lists.push(<li key={data[i].id}>
@@ -365,7 +381,9 @@ TOC.js
 ```
 this.props.onChangePage 콜백 함수의 인자에 클릭된 항목의 ID를 인자로 넣어주면 된다. 왜냐하면 onChangePage속성은 App.js에서 state를 세팅하는 함수를 props로써 넘긴 것이기 때문이다. 그럼 이제 넘겨주었으니 받아서 selected_content_id를 세팅해보자.  
 
-```
+```javascript
+// App.js
+
         <TOC 
           data={this.state.contents} 
           onChangePage={function(id){
@@ -380,7 +398,9 @@ this.props.onChangePage 콜백 함수의 인자에 클릭된 항목의 ID를 인
 ![image](https://user-images.githubusercontent.com/32003817/107638243-a4375400-6cb2-11eb-84b5-c9672e97e9e5.png)
 디버거를 찍어봤는데 정상적으로 인자부분에 ID가 넘어오는 것은 확인이 되지만 내용이 변하지 않는 것을 알 수 있다. 그것은 넘어오는 인자값이 **문자**이기 때문이다. 그래서 Number()를 사용하여 타입을 숫자로 캐스팅해야한다.  
 
-```
+```javascript
+// App.js
+
         <TOC 
           data={this.state.contents} 
           onChangePage={function(id){
@@ -394,7 +414,9 @@ this.props.onChangePage 콜백 함수의 인자에 클릭된 항목의 ID를 인
 
 * 꿀팁  
 추가로 설명을 덧붙이자면, TOC.js에서 data-id 속성을 통해 각 항목의 ID를 얻어왔다. 하지만 이렇게 하지 않는 방법이 있다. 그것은 bind()를 이용하는 방법이다.  
-```
+```javascript
+// Toc.js
+
           <a href={"/content/"+data[i].id} 
           onClick={
             function(id, num, e){
@@ -415,7 +437,9 @@ props는 read-only 성질이 있기 때문에 넘겨주는 쪽에서 수정해�
 
 ## Create 구현 - 1
 우리는 create, update, delete의 state를 변경하기 위한 버튼들을 만들어야 한다.  
-```
+```javascript
+// App.js
+
         <ul>
           <li><a href="/create">create</a></li>
           <li><a href="/update">update</a></li>
@@ -424,8 +448,8 @@ props는 read-only 성질이 있기 때문에 넘겨주는 쪽에서 수정해�
 ```  
 다만, delete같은 경우에는 링크를 통해 접근하는 방식을 지양해야 한다. 왜나하면, 해당 링크가 노출될 경우 사용자가 삭제하려는 데이터 이외의 다른 서버의 데이터를 마음대로 삭제할 수 있기 때문이다. 그래서 반드시 다른 데이터에는 접근하지 못하도록 input 태그를 사용하는 것이 적합하다. 그리고 위의 내용을 Control.js 컴포넌트로 분리시켜준다.  
 
-```
-Control.js
+```javascript
+// Control.js
 
 import React, { Component } from 'react'
 
@@ -460,8 +484,8 @@ class Control extends Component {
 
 ```  
 
-```
-App.js
+```javascript
+// App.js
 
         <Control onChangeMode={function(mode){  // Control.js의 onClick속성에서 핸들러에 넘긴 mode인자 'create', 'update', 'delete'
           this.setState(
@@ -474,8 +498,8 @@ App.js
 ## Create 구현 - 2
 우선 state가 welcome일 때와 read상태일 때는 기존에 사용하던 Content 컴포넌트가 나오고, 나머지 상태 (create, update, delete) 상태에서는 각 상태에 적합한 Content 컴포넌트를 출력하기를 원한다. 그래서 기존의 Content 컴포넌트를 ReadContent로 바꾼다. 그리고, Content가 들어가는 부분을 _article이라는 변수로 처리한다.  
 
-```
-App.js
+```javascript
+// App.js
 
   render() {
     var _title, _desc, _article = null;  // aritcle 변수 선언
@@ -509,9 +533,8 @@ App.js
 
 ## Create 구현 - 3
 이번 시간에는 CreateContent.js의 form 태그를 구현해볼 것이다.  
-```
-...
-CreateContent.js
+```javascript
+// CreateContent.js
 
 ...
 
@@ -530,7 +553,6 @@ CreateContent.js
               </p>
             </form>
 
-...
 ...            
 ```
 간단히 설명하자면 이 코드는 React의 기능을 사용한 것이 아닌 HTML의 native한 기능들로 구현한 것이다. form 태그의 action 속성은 form안의 내용들을 전송할 위치를 의미한다. method 속성은 어떠한 HTML method (GET, POST, PUT, PATCH, DELETE ...)를 사용할 것인지 정하고 onSubmit 속성은 form 태그 내부에서 submit 타입의 input이 발생했을 때 나타나는 이벤트이다. e.preventDefault() 를 통해 action 의 속성값인 create_process 위치로 이동하는 것을 막았다. 
@@ -545,8 +567,8 @@ e.target[0 ~ 2]를 통해 form 태그 안의 각 태그들을을 참조하는 �
 ![image](https://user-images.githubusercontent.com/32003817/108648521-cf197780-74fe-11eb-9d9a-a8458eceeb6c.png)
 e.target.title / e.target.desc를 통해 참조하는 방법  
 
-```
-CreateContent.js
+```javascript
+// CreateContent.js
 ...
 
             <form action="create_process" method="post" onSubmit={function(e){
@@ -563,9 +585,8 @@ CreateContent.js
 
 form 태그에서 제출을 할경우 onSubmit 속성의 이벤트 핸들러가 동작한다. 이때 App.js에서 props로 넘긴 this.props.onSubmit()이 실행된다. App.js를 살펴보자.  
 
-```
-App.js
-
+```javascript
+// App.js
 ...
 
       <CreateContent onSubmit={function(_title, _desc){
@@ -584,8 +605,8 @@ e.target.title.value와 e.target.desc.value값이 CreateContent 컴포넌트의 
 ## Create 구현 - 5
 이번 시간에 우리는 제출했을 때 발생한 onSubmit 이벤트로부터 _title, _desc 값을 state에 추가시켜 반영할 것이다.  
 
-```
-App.js
+```javascript
+// App.js
 
 class App extends Component {
   constructor(props){
@@ -596,8 +617,8 @@ class App extends Component {
 ```
 새로 추가할 콘텐츠의 id를 미리 정의한다.  
 
-```
-App.js
+```javascript
+// App.js
 
 ...
       <CreateContent onSubmit={function(_title, _desc){
@@ -615,8 +636,8 @@ App.js
 ![image](https://user-images.githubusercontent.com/32003817/108791136-b4f49d80-75c1-11eb-86db-c6aa52717b25.png)
 push는 위와 같이 arr배열을 직접 값을 추가하는 반면 concat은 값이 추가된 새로운 배열을 반환하기 때문에 원본에 영향을 주지않는다.  
 
-```
-App.js 
+```javascript
+// App.js 
 
         var new_content = {id: this.max_content_id, title: _title, desc: _desc};
         var _contents = this.state.contents.concat(new_content);
@@ -634,8 +655,8 @@ shouldComponentUpdate() 메소드는 ComponentLifeCycle 인터페이스로부터
 * 새로운 props와 state를 얻을 수 있다.
 * render() 메소드 호출 여부를 결정할 수 있다.  
 
-```
-TOC.js
+```javascript
+// TOC.js
 
 class TOC extends Component {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -646,4 +667,47 @@ class TOC extends Component {
     render() { ... }
     ...
 ```
-this.props.data를 통해 이전 상태의 콘텐츠들과 nextProps.data를 통해 새로운 상태의 콘텐츠들을 들고왔다. 이들을 비교하여 렌더링 여부를 결정하면 된다.
+this.props.data를 통해 이전 상태의 콘텐츠들과 nextProps.data를 통해 새로운 상태의 콘텐츠들을 들고왔다. 이들을 비교하여 렌더링 여부를 결정하면 된다. 그렇다면 이전 상태의 내용과 현재 상태의 내용을 비교하여 다른 경우에만 true를 리턴한다면 render() 메소드를 호출할 것이다.  
+
+```javascript
+// TOC.js
+
+class TOC extends Component {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      console.log('shouldComponentUpdate');
+      var prevContents = this.props.data;
+      var nextContents = nextProps.data;
+      console.log(prevContents, nextContents)
+      if(prevContents === nextContents){
+        return false;
+      }
+      return true;
+    }
+    render() {
+      console.log('Im rendered')
+...
+```
+![image](https://user-images.githubusercontent.com/32003817/109404571-c4e9f400-79aa-11eb-93ea-b8411ca7d974.png)  
+최초 로딩할 때 render() 함수를 호출한다. shouldComponentUpdate는 호출되지 않는다.  
+
+![image](https://user-images.githubusercontent.com/32003817/109404617-2d38d580-79ab-11eb-93da-634befc62865.png)  
+데이터를 추가하지 않고 목록만 선택한 경우에는 shouldComponentUpdate() 메소드가 호출되지만 변경된 props의 데이터가 없으므로 render() 함수는 호출되지 않는다.  
+
+![image](https://user-images.githubusercontent.com/32003817/109404656-75f08e80-79ab-11eb-9c3a-0d64e2efc85e.png)  
+반면 새로운 항목을 추가하자 props의 데이터에 이전 상태와 다르므로 render() 메소드가 호출되는 모습을 보여준다. 그러나 여기서 유의할 점이 있다.  
+
+```javascript
+      <CreateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        this.state.contents.push(new_content);
+        this.setState({contents: this.state.contents})
+      }.bind(this)}>
+      </CreateContent>
+```
+다음과 같이 push를 하게 되면 원본을 수정하게 되므로 이전 props가 변하게 되어 newProps와 비교를 해도 차이를 인지할 수 없다.  
+![image](https://user-images.githubusercontent.com/32003817/109404729-2f4f6400-79ac-11eb-9c4a-c64a9690812d.png)
+데이터를 새로 추가했음에도 이전 상태가 새로운 상태와 동일한 상태이다.  
+
+## Create 구현 - 7
