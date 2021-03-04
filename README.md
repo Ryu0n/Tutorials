@@ -726,4 +726,17 @@ var b = Object.assign({}, a);
 console.log(a, b, a==b);
 // VM1298:1 {name: "egoing"} {name: "egoing"} false
 ```
-Object.assign() 메소드의 첫 번째 인자는 target, 두 번째 인자는 source 이다. 
+Object.assign() 메소드의 첫 번째 인자는 target, 두 번째 인자는 source 이다.  
+
+javascript의 아쉬운 점이 있다면, push(), concat() 메소드처럼 원본 수정여부를 기억해야 하는 일관성이 떨어지는 모습을 볼 수 있다. 그래서 우리는 immutable.js 모듈을 사용하면 모든 객체를 immutable (원본을 수정하지 않고 새로운 객체를 반환하는 형태로 만들 수 있다.  
+```javascript
+import Immutable from require('immutable');
+var map1: Immutable.Map<string, number>;
+map1 = Immutable.Map({ a: 1, b: 2, c: 3 }); // Immutable 객체
+var map2 = map1.set('b', 50);
+map1.get('b'); // 2
+map2.get('b'); // 50
+```
+https://immutable-js.github.io/immutable-js/
+
+## Update 구현
