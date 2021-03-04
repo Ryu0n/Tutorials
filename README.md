@@ -711,3 +711,19 @@ class TOC extends Component {
 데이터를 새로 추가했음에도 이전 상태가 새로운 상태와 동일한 상태이다.  
 
 ## Create 구현 - 7
+immutable 은 불변의 속성을 의미한다. 
+```javascript
+var a = [1, 2];
+var b = Array.from(a);
+console.log(a, b, a == b);
+// VM403:1 (2) [1, 2] (2) [1, 2] false
+```
+Array.from() 메소드를 사용하면 인자로 넘긴 배열과 동일한 내용의 다른 배열(객체)를 반환한다. 
+
+```javascript
+var a = {name: 'egoing'};
+var b = Object.assign({}, a);
+console.log(a, b, a==b);
+// VM1298:1 {name: "egoing"} {name: "egoing"} false
+```
+Object.assign() 메소드의 첫 번째 인자는 target, 두 번째 인자는 source 이다. 
