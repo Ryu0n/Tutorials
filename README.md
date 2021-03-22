@@ -740,3 +740,139 @@ map2.get('b'); // 50
 https://immutable-js.github.io/immutable-js/
 
 ## Update 구현
+```javascript
+// App.js
+else if (this.state.mode === 'update'){  // create state
+      _article = 
+      <UpdateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
+      }.bind(this)}>
+      </UpdateContent>
+    }
+```
+update state 에서 업데이트 form을 위한 코드를 작성했다. 그러나 render() 메소드의 크기가 너무 커져서 다음과 같이 함수로 분리했다.  
+
+```javascript
+// App.js
+  getContent() {
+    var _title, _desc, _article = null;  // aritcle 변수 선언
+    if (this.state.mode === 'welcome'){  // welcome state
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'read'){  // read state
+      var i = 0;
+      while (i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if (data.id === this.state.selected_content_id){
+          _title = data.title;
+          _desc = data.desc;
+          break;
+        }  
+        i += 1;
+      }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'create'){  // create state
+      _article = 
+      <CreateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
+      }.bind(this)}>
+      </CreateContent>
+
+    } else if (this.state.mode === 'update'){  // update state
+      _article = 
+      <UpdateContent onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
+      }.bind(this)}>
+      </UpdateContent>
+    }
+
+    return _article;
+  }
+```
+그리고 render() 메소드에서는 다음과 같이 해당 함수를 호출한다.
+```javascript
+// App.js
+  render() {
+    return (
+      <div className="App">
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub}
+          onChangePage={function(){
+            this.setState({mode: 'welcome'});
+          }.bind(this)}>
+        </Subject>
+        <TOC 
+          data={this.state.contents} 
+          onChangePage={function(id){
+            this.setState(
+              {mode: 'read',
+              selected_content_id: Number(id)}
+              );
+          }.bind(this)}>
+        </TOC>
+        <Control onChangeMode={function(mode){
+          this.setState(
+            {mode: mode}
+          )
+        }.bind(this)}></Control>
+        {this.getContent()}
+      </div>
+    );
+  }
+```
+그다음으로 해야할 작업은 어떤 내용을 수정할지 알아야하므로 selected_content_id를 UpdateContent.js 컴포넌트로 넘겨야한다.  
+우선 read state 일때의 로직을 메소드로 분리하자. 왜나하면 선택된 콘텐츠의 내용을 update에도 전달해줄때 재사용하기 때문이다.
+```javascript
+// App.js
+  getReadContent() {
+    var i = 0;
+    while (i < this.state.contents.length){
+      var data = this.state.contents[i];
+      if (data.id === this.state.selected_content_id){
+        return data;
+      }  
+      i += 1;
+    }
+  }
+```
+그리고 read state에서는 다음과 같이 사용한다.
+```javascript
+// App.js
+    } else if (this.state.mode === 'read'){  // read state
+      var _content = this.getReadContent();
+      _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>
+
+    } 
+```
+update state에서는 다음과 같이 props로 주입한다.
+```javascript
+// App.js
+else if (this.state.mode === 'update'){  // update state
+      _content = this.getReadContent();
+      _article = 
+      <UpdateContent data={_content} onSubmit={function(_title, _desc){
+        console.log(_title, _desc);  // onSubmit으로부터 값을 가져오는데 성공!!
+        this.max_content_id += 1;
+        var new_content = {id: this.max_content_id, title: _title, desc: _desc};
+        var _contents = this.state.contents.concat(new_content);
+        this.setState({contents: _contents});
+      }.bind(this)}>
+      </UpdateContent>
+    }
+```

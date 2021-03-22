@@ -13,7 +13,7 @@ class Control extends Component {
           <li><a href="/update" onClick={
             function(e){
               e.preventDefault();
-              this.props.onChangeMode('update ');  // onChangeMode 핸들러 실행
+              this.props.onChangeMode('update');  // onChangeMode 핸들러 실행
             }.bind(this)
           }>update</a></li>
           <li><input onClick={

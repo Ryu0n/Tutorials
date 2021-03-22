@@ -14,6 +14,7 @@ class TOC extends Component {
       }
       return true;
     }
+    
     render() {
       console.log('Im rendered');
       var lists = [];
