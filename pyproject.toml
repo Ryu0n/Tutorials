@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.8"
 dependency-injector = "^4.41.0"
 ipykernel = "^6.25.0"
-pydantic = "^2.1.1"
+pydantic = "1.1.0"
 
 
 [build-system]
