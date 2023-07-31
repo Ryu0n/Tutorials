@@ -3,7 +3,8 @@ reference about Enum : https://greendreamtrre.tistory.com/358
 """
 
 from enum import Enum
-from pydantic import BaseSettings, Field, validator
+from pydantic_settings import BaseSettings
+from pydantic import Field, validator
 from dependency_injector import containers, providers
 
 
@@ -17,7 +18,6 @@ class ApplicationEnvironment(Enum):
 class DatabaseSettings(BaseSettings):
     db_host: str = Field(
         default="localhost",
-        env="DATABASE_HOST"  # override by environment value
     )
     db_port: int = Field(
         default=3306,
@@ -28,10 +28,9 @@ class DatabaseSettings(BaseSettings):
 class ApplicationSettings(BaseSettings):
     env: ApplicationEnvironment = Field(
         default="local",
-        env="ENV"
     )
     db: DatabaseSettings = DatabaseSettings()
-    
+
     @validator("env")
     def validate_env(cls, v: ApplicationEnvironment) -> str:
         if v.value not in ["local", "dev", "prod", "test"]:
