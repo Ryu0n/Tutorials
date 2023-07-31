@@ -38,18 +38,47 @@ class ApplicationSettings(BaseSettings):
         return v
 
 
+class EnvsBasic(BaseSettings):
+    name: str
+    age: int
+
+
+class Envs(BaseSettings):
+    name: str = Field(
+        default="name"
+    )
+    age: int = Field(
+        default=0
+    )
+
+
 class ApplicationContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
 
 if __name__ == "__main__":
-    container = ApplicationContainer()
-    container.config.from_pydantic(
-        ApplicationSettings()
+    # container = ApplicationContainer()
+    # container.config.from_pydantic(
+    #     ApplicationSettings()
+    # )
+    # print(container.config.env())
+    # print(container.config.env().name)
+    # print(container.config.env().value)
+    # print(container.config.db())
+    # print(container.config.db.db_host())
+    # print(container.config.db.db_port())
+    dotenv = Envs(_env_file='.env')
+    print(
+        dotenv,
+        dotenv.name,
+        dotenv.age,
+        sep='\n'
     )
-    print(container.config.env())
-    print(container.config.env().name)
-    print(container.config.env().value)
-    print(container.config.db())
-    print(container.config.db.db_host())
-    print(container.config.db.db_port())
+
+    dotenv_default = Envs()
+    print(
+        dotenv_default,
+        dotenv_default.name,
+        dotenv_default.age,
+        sep='\n'
+    )
