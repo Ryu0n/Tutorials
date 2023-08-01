@@ -20,13 +20,19 @@ class Container(containers.DeclarativeContainer):
 
 
 @inject
-def wiring_provide(service: StrictService = Provide[Container.strict_service]) -> None:  # here
+def wiring_provide(
+    service: StrictService = Provide[Container.strict_service]
+) -> None:
     redis_service = service
+    print(service)
     print(f"Service name : {redis_service.name}")
 
 
 @inject
-def wiring_provider(service_id: int, service: Callable[..., Service] = Provider[Container.service]) -> None:  # here
+def wiring_provider(
+    service_id: int,
+    service: Callable[..., Service] = Provider[Container.service]
+) -> None:
     redis_service = service(service_id=service_id)
     print(f"Service name : {redis_service.service_id}")
     print(f"Service name : {redis_service.name}")
