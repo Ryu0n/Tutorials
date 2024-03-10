@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "mockdependencyinjector"
+version = "0.1.0"
+description = ""
+authors = ["Ryu0n <hsung951027@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+dependency-injector = "^4.41.0"
+ipykernel = "^6.25.0"
+pydantic = "2.1.1"
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.0.2"
+fastapi = "^0.100.1"
+uvicorn = "^0.23.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
