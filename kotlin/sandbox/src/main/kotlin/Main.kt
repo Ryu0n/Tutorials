@@ -18,4 +18,7 @@ fun main() {
     }
 
     printSum(a = 1, b = 2)
+
+    val r = Rectangle(height = 1.0, length = 2.0)
+    println("Perimeter of rectangle is ${r.perimeter}")
 }
