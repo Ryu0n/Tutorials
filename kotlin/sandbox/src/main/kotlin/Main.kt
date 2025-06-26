@@ -96,4 +96,22 @@ fun main() {
 
     println(describe("Hello"))
     println(describe_direct("World"))
+
+    for (i in 1..10 step 3) {
+        println("Step: $i")
+    }
+    for (i in 10 downTo 0 step 2) {
+        println("Down: $i")
+    }
+
+    val x1 = 10
+    val y1 = 9
+    if (x1 in 1..y1+1) {
+        println("fits in range")
+    }
+
+    val list = listOf("a", "b", "c")
+    if (-1 !in 0..list.lastIndex) {
+        println("-1 is out of range")
+    }
 }
