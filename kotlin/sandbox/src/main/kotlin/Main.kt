@@ -52,4 +52,10 @@ fun main() {
     for (index in immutableItems.indices) {
         println("Index : $index, Item : ${immutableItems[index]}")
     }
+
+    var currentIndex = 0
+    while (currentIndex < immutableItems.size) {
+        println(immutableItems[currentIndex])
+        currentIndex++
+    }
 }
