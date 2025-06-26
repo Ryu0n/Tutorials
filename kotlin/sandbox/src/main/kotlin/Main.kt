@@ -43,4 +43,13 @@ fun main() {
     val m1 = maxOf(a=1, b=2)
     val m2 = maxOf(a=2, b=1)
     println("m1 : ${m1}, m2 : ${m2}")
+
+    val immutableItems = listOf("apple", "banana", "kiwi")
+    for (item in immutableItems) {
+        println(item)
+    }
+
+    for (index in immutableItems.indices) {
+        println("Index : $index, Item : ${immutableItems[index]}")
+    }
 }
