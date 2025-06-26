@@ -11,6 +11,24 @@ fun maxOf(a: Int, b: Int): Int {
 }
 // fun maxOf(a: Int, b: Int) = if (a > b) a else b
 
+
+fun describe(obj: Any): String {
+    val result = when (obj) {
+        is Int -> "Int"
+        is Long -> "Long"
+        !is String -> "Not a String"
+        else -> "Unknown type"
+    }
+    return result
+}
+
+fun describe_direct(obj: Any): String = when (obj) {
+    is Int -> "Int"
+    is Long -> "Long"
+    !is String -> "Not a String"
+    else -> "Unknown type"
+}
+
 fun main() {
     var name = "Kotlin"
     name = "World"
@@ -40,10 +58,12 @@ fun main() {
     val s2 = "${s1.replace("is", "was")} but now is $a"
     println(s2)
 
+    // Function call
     val m1 = maxOf(a=1, b=2)
     val m2 = maxOf(a=2, b=1)
     println("m1 : ${m1}, m2 : ${m2}")
 
+    // For loops
     val immutableItems = listOf("apple", "banana", "kiwi")
     for (item in immutableItems) {
         println(item)
@@ -53,9 +73,27 @@ fun main() {
         println("Index : $index, Item : ${immutableItems[index]}")
     }
 
+    // While loops
     var currentIndex = 0
     while (currentIndex < immutableItems.size) {
         println(immutableItems[currentIndex])
         currentIndex++
     }
+
+    // When expression
+    val x = 2
+    when (x) {
+        1 -> println("x is 1")
+        2 -> println("x is 2")
+        else -> println("x is neither 1 nor 2")
+    }
+
+    val y = "Kotlin"
+    when (y) {
+        "Kotlin" -> println("This fine-grained language is $y")
+        "Java" -> println("This old language is $y")
+    }
+
+    println(describe("Hello"))
+    println(describe_direct("World"))
 }
