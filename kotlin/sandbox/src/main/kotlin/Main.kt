@@ -21,4 +21,13 @@ fun main() {
 
     val r = Rectangle(height = 1.0, length = 2.0)
     println("Perimeter of rectangle is ${r.perimeter}")
+
+    // String templates
+    var a = 1
+    var s1 = "a is $a"
+    println(s1)
+
+    a = 2
+    val s2 = "${s1.replace("is", "was")} but now is $a"
+    println(s2)
 }
