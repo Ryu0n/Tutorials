@@ -2,6 +2,15 @@ package org.example
 
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
+fun maxOf(a: Int, b: Int): Int {
+    if (a > b) {
+        return a
+    } else {
+        return b
+    }
+}
+// fun maxOf(a: Int, b: Int) = if (a > b) a else b
+
 fun main() {
     var name = "Kotlin"
     name = "World"
@@ -30,4 +39,8 @@ fun main() {
     a = 2
     val s2 = "${s1.replace("is", "was")} but now is $a"
     println(s2)
+
+    val m1 = maxOf(a=1, b=2)
+    val m2 = maxOf(a=2, b=1)
+    println("m1 : ${m1}, m2 : ${m2}")
 }
