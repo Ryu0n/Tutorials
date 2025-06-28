@@ -139,4 +139,9 @@ fun main() {
     val owner = Person()
     val pet1 = Pet(owner = owner)
     println("Owner has ${owner.pets.size} pets")
+
+    val delegation1 = DelegationWithInit(name = "Kotlin")
+    val delegation2 = DelegationWithInit(name = "Kotlin", age = 5)
+    val delegation3 = DelegationWithInit(name = "Kotlin", age = 5, desc = "A programming language")
+
 }
