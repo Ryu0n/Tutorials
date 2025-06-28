@@ -12,8 +12,13 @@ class Rectangle(val height: Double, val length: Double): Shape() {
 
 class Square(val side: Double): Shape() {
     val perimeter = side * 4
+    var name: String = "Square"
 
     fun area(): Double {
         return side * side
+    }
+
+    fun setMyName(name: String): Unit {
+        this.name = name
     }
 }

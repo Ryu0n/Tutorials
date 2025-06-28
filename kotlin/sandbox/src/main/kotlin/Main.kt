@@ -116,5 +116,6 @@ fun main() {
     }
 
     val s = Square(side= 5.0)
-    s.area()
+    s.setMyName(name= "My Square")
+    println("Square name: ${s.name}, area: ${s.area()}")
 }
