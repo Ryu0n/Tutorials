@@ -124,4 +124,13 @@ fun main() {
     val s = Square(side= 5.0)
     s.setMyName(name= "My Square")
     println("Square name: ${s.name}, area: ${s.area()}")
+
+    awd@for (i in 0..10) {
+        for (j in 0..10) {
+            if (i == 5) {
+                continue@awd
+            }
+            println("$i $j")
+        }
+    }
 }
