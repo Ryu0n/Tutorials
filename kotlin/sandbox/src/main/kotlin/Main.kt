@@ -144,4 +144,13 @@ fun main() {
     val delegation2 = DelegationWithInit(name = "Kotlin", age = 5)
     val delegation3 = DelegationWithInit(name = "Kotlin", age = 5, desc = "A programming language")
 
+    val animal1 = Animal("Dog")
+    animal1.bark(sound = null)
+    animal1.bark(sound = "Woof Woof")
+    animal1.bark(sound = null)
+
+    val animal2 = Dog("Dog")
+    animal2.bark(sound = null)
+    animal2.bark(sound = "Bark Bark")
+    animal2.bark(sound = null)
 }
