@@ -114,4 +114,7 @@ fun main() {
     if (-1 !in 0..list.lastIndex) {
         println("-1 is out of range")
     }
+
+    val s = Square(side= 5.0)
+    s.area()
 }
