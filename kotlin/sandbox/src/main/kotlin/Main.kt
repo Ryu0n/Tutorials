@@ -153,4 +153,8 @@ fun main() {
     animal2.bark(sound = null)
     animal2.bark(sound = "Bark Bark")
     animal2.bark(sound = null)
+
+    val child = Child()
+    child.foo()
+    child.bar()
 }
