@@ -133,4 +133,7 @@ fun main() {
             println("$i $j")
         }
     }
+
+    var demo = InitDemo("Kotlin")
+
 }
