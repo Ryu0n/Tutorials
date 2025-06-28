@@ -29,6 +29,12 @@ fun describe_direct(obj: Any): String = when (obj) {
     else -> "Unknown type"
 }
 
+//fun sampleFunction(val a: Int) {
+//    //TIP <shortcut actionId="ShowIntentionActions"/>을(를) 눌러 이 함수에 대한 제안을 확인하세요.
+//    // 이 함수는 a 매개변수를 사용하지 않습니다.
+//    println("This is a sample function with parameter a: $a")
+//}
+
 fun main() {
     var name = "Kotlin"
     name = "World"
