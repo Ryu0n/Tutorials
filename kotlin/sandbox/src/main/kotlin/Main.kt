@@ -136,4 +136,7 @@ fun main() {
 
     var demo = InitDemo("Kotlin")
 
+    val owner = Person()
+    val pet1 = Pet(owner = owner)
+    println("Owner has ${owner.pets.size} pets")
 }
