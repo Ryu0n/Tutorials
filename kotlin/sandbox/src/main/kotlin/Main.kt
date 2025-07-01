@@ -157,4 +157,5 @@ fun main() {
     val child = Child()
     child.foo()
     child.bar()
+    println(child.propertyWithImplementation)
 }
