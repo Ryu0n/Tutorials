@@ -1,25 +1,13 @@
 package org.example.echo_server.server
 
-import java.io.BufferedInputStream
+import org.springframework.stereotype.Component
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 
-
-//class SimpleRunnable(private val delay: Long) : Runnable {
-//    override fun run() {
-//        try {
-//            Thread.sleep(delay)
-//            println("Thread completed after $delay ms")
-//        } catch (e: InterruptedException) {
-//            println("Thread interrupted")
-//        }
-//    }
-//}
 
 class ListenRunnable(private val socket: Socket) : Runnable {
     override fun run() {
@@ -46,22 +34,13 @@ class ListenRunnable(private val socket: Socket) : Runnable {
     }
 }
 
+@Component
 class EchoServer {
     private val serverSocket = ServerSocket(
         9090,
         50, // Maximum number of queued connections
         InetAddress.getByName("localhost"),
     )
-
-//    fun start() {
-//        val maximumCount = 10
-//        var count = 0
-//
-//        while (count < maximumCount) {
-//            Thread(SimpleRunnable(3000)).start()
-//            count++
-//        }
-//    }
 
     fun start() {
         while (true) {
