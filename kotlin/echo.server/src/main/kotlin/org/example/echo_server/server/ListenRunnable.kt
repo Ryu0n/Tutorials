@@ -1,11 +1,8 @@
 package org.example.echo_server.server
 
-import org.springframework.stereotype.Component
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
-import java.net.InetAddress
-import java.net.ServerSocket
 import java.net.Socket
 
 
@@ -30,22 +27,6 @@ class ListenRunnable(private val socket: Socket) : Runnable {
         } finally {
             input?.close()
             output?.close()
-        }
-    }
-}
-
-@Component
-class EchoServer {
-    private val serverSocket = ServerSocket(
-        9090,
-        50, // Maximum number of queued connections
-        InetAddress.getByName("localhost"),
-    )
-
-    fun start() {
-        while (true) {
-            val socket = serverSocket.accept()
-            Thread(ListenRunnable(socket)).start()
         }
     }
 }
