@@ -1,5 +1,6 @@
 package org.example.machine
 
+import org.example.machine.event.ActivationEvent
 import org.example.menu.ingredient.Ingredient
 
 class PizzaMachine(
@@ -8,13 +9,15 @@ class PizzaMachine(
     val buttons: MutableList<Button>,
     val ingredients: MutableList<Ingredient>,
 ) {
-    fun refreshButtons() {
-        for (button in buttons) {
-            if (button.isMoneyEnough(insertedMoney) && button.isIngredientsEnough(ingredients)) {
-                button.onButtonActivation()
-            } else {
-                button.onButtonDeactivation()
-            }
+    // TODO: Ref Command Pattern
+    fun refreshButtonStates() {
+        for (listener in buttons) {
+            listener.onActivated(
+                ActivationEvent(
+                    insertedMoney = insertedMoney,
+                    ingredients = ingredients,
+                )
+            )
         }
     }
 
@@ -30,7 +33,7 @@ class PizzaMachine(
         }
 
         insertedMoney += money ?: 0
-        refreshButtons()
+        refreshButtonStates()
     }
 
     fun showAvailableAssets(): Unit {
@@ -100,6 +103,6 @@ class PizzaMachine(
         }
         println("You have purchased ${button.menu.name}.")
         showAvailableAssets()
-        refreshButtons()
+        refreshButtonStates()
     }
 }

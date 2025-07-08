@@ -25,18 +25,19 @@ fun main() {
         Pepperoni(),
         Pepperoni(),
     )
-    val machine = PizzaMachine(
-        buttons = mutableListOf(
-            Button(
-                menu = CheesePizza()
-            ),
-            Button(
-                menu = PepperoniPizza()
-            ),
-            Button(
-                menu = CheesePepperoniPizza()
-            )
+    val buttons = mutableListOf(
+        Button(
+            menu = CheesePizza()
         ),
+        Button(
+            menu = PepperoniPizza()
+        ),
+        Button(
+            menu = CheesePepperoniPizza()
+        )
+    )
+    val machine = PizzaMachine(
+        buttons = buttons,
         ingredients = ingredients,
     )
 
