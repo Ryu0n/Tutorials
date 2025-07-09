@@ -2,9 +2,9 @@ package org.example
 
 import org.example.machine.Button
 import org.example.machine.PizzaMachine
-import org.example.menu.CheesePepperoniPizza
-import org.example.menu.CheesePizza
-import org.example.menu.PepperoniPizza
+import org.example.menu.pizza.CheesePepperoniPizza
+import org.example.menu.pizza.CheesePizza
+import org.example.menu.pizza.PepperoniPizza
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
 import org.example.menu.ingredient.Pepperoni

@@ -1,10 +1,10 @@
-package org.example.menu
+package org.example.menu.pizza
 
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
 import org.example.menu.ingredient.Pepperoni
 
-class CheesePepperoniPizza : Menu(
+class CheesePepperoniPizza : Pizza(
     name = "Cheese Pepperoni Pizza",
     ingredients = mutableListOf(
         Dough(),
