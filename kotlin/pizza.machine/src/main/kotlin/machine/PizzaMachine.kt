@@ -15,7 +15,7 @@ class PizzaMachine(
                 insertedMoney -= button.menu.price
                 button.menu.ingredients.forEach { ingredients.remove(it) }
                 println("You have purchased ${button.menu.name}.")
-                showAvailableAssets()
+                showRemainedAssets()
                 refreshButtonStates()
             }
         }
@@ -48,9 +48,9 @@ class PizzaMachine(
         refreshButtonStates()
     }
 
-    fun showAvailableAssets(): Unit {
+    fun showRemainedAssets(): Unit {
         println("Current inserted money: ₩$insertedMoney")
-        println("Available ingredients:")
+        println("Remained ingredients:")
         for (ingredient in ingredients) {
             println("- ${ingredient.name} (Price: ₩${ingredient.price})")
         }
@@ -58,7 +58,7 @@ class PizzaMachine(
 
     fun showAvailableMenu(): Unit {
         println("\n" + "=".repeat(delimeterRepeat))
-        showAvailableAssets()
+        showRemainedAssets()
         println("Current available buttons as below:")
         for (index in buttons.indices) {
             if (!buttons[index].isActive) continue
@@ -78,12 +78,7 @@ class PizzaMachine(
         val (div100, mod100) = divMod(mod500, 100)
 
         println("You have received ₩$insertedMoney :")
-        println("$div10000 x ₩10000")
-        println("$div5000 x ₩5000")
-        println("$div1000 x ₩1000")
-        println("$div500 x ₩500")
-        println("$div100 x ₩100")
-        println("₩$mod100")
+        println("$div10000 x ₩10000, $div5000 x ₩5000, $div1000 x ₩1000, $div500 x ₩500, $div100 x ₩100, and ₩$mod100 as change.")
     }
 
     fun onButtonSelected(): Int {
