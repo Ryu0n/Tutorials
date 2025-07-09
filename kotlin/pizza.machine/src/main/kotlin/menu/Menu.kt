@@ -1,10 +1,7 @@
 package org.example.menu
 
-import org.example.menu.ingredient.Ingredient
-
-open class Menu (
-    val name: String,
-    val ingredients: List<Ingredient>,
+abstract class Menu(
+    open val name: String,
 ) {
-    val price: Int = ingredients.sumOf { it.price }
+    abstract val price: Int
 }
