@@ -16,11 +16,11 @@ class Application(
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
         println("Starting Echo server...")
-//        multiThreadEchoServer.start()
+        multiThreadEchoServer.start()
 //        fixedThreadPoolEchoServer.start()
-        runBlocking {
-            coroutineEchoServer.start()
-        }
+//        runBlocking {
+//            coroutineEchoServer.start()
+//        }
         println("Echo server started.")
     }
 }
