@@ -7,4 +7,6 @@ interface ButtonEventListener {
     var isActive: Boolean
 
     fun onActivated(e: ActivationEvent)
+
+    fun onPressed()
 }

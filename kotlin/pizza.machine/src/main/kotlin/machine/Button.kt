@@ -9,6 +9,7 @@ class Button(
     val menu: Menu,
     override var isActive: Boolean = false,
 ) : ButtonEventListener {
+    var onPurchaseRequested: ((menu: Menu) -> Unit)? = null
 
     fun isMoneyEnough(insertedMoney: Int): Boolean {
         return insertedMoney >= menu.price
@@ -24,5 +25,14 @@ class Button(
         } else {
             isActive = false
         }
+    }
+
+    override fun onPressed() {
+        if (!isActive) {
+            println("Button for ${menu.name} is not active. Please check your inserted money or available ingredients.")
+            return
+        }
+
+        onPurchaseRequested?.invoke(menu)
     }
 }

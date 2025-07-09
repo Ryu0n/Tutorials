@@ -43,12 +43,12 @@ fun main() {
 
     machine.showAvailableMenu()
     while (true) {
-        machine.insertMoney()
+        machine.onMoneyInserted()
         machine.showAvailableMenu()
-        val index = machine.selectButton()
+        val index = machine.onButtonSelected()
         if (index == -1) {
             break
         }
-        machine.pressButton(index)
+        machine.buttons[index].onPressed()
     }
 }
