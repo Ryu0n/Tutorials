@@ -2,12 +2,16 @@ package org.example
 
 import org.example.machine.Button
 import org.example.machine.PizzaMachine
+import org.example.menu.beverage.Coffee
+import org.example.menu.beverage.Cola
 import org.example.menu.pizza.CheesePepperoniPizza
 import org.example.menu.pizza.CheesePizza
 import org.example.menu.pizza.PepperoniPizza
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
 import org.example.menu.ingredient.Pepperoni
+import org.example.menu.side.Potato
+import org.example.menu.side.Salad
 
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
@@ -34,6 +38,18 @@ fun main() {
         ),
         Button(
             menu = CheesePepperoniPizza()
+        ),
+        Button(
+            menu = Cola()
+        ),
+        Button(
+            menu = Coffee()
+        ),
+        Button(
+            menu = Potato()
+        ),
+        Button(
+            menu = Salad()
         )
     )
     val machine = PizzaMachine(

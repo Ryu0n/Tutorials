@@ -1,10 +1,13 @@
 package org.example.machine
 
 import org.example.machine.event.ActivationEvent
+import org.example.menu.beverage.Beverage
 import org.example.menu.ingredient.Ingredient
+import org.example.menu.pizza.Pizza
+import org.example.menu.side.Side
 
 class PizzaMachine(
-    val delimeterRepeat: Int = 50,
+    val delimeterRepeat: Int = 70,
     var insertedMoney: Int = 0,
     val buttons: MutableList<Button>,
     val ingredients: MutableList<Ingredient>,
@@ -13,10 +16,15 @@ class PizzaMachine(
         buttons.forEach { button ->
             button.onPurchaseRequested = { menu ->
                 insertedMoney -= button.menu.price
-                button.menu.ingredients.forEach { ingredients.remove(it) }
+                val buttonMenu = button.menu
+                if (buttonMenu is Pizza) {
+                    buttonMenu.ingredients.forEach { ingredients.remove(it) }
+                }
                 println("You have purchased ${button.menu.name}.")
                 showRemainedAssets()
-                purchaseAdditionalIngredient()
+                if (buttonMenu is Pizza) {
+                    purchaseAdditionalIngredient()
+                }
                 refreshButtonStates()
             }
         }
@@ -94,7 +102,14 @@ class PizzaMachine(
         println("Current available buttons as below:")
         for (index in buttons.indices) {
             if (!buttons[index].isActive) continue
-            println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price} (Ingredients: ${buttons[index].menu.ingredients.joinToString(", ") { it.name }})")
+            val menu = buttons[index].menu
+            if (menu is Pizza) {
+                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
+            } else if (menu is Beverage || menu is Side) {
+                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price}")
+            } else {
+                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price} (Unknown type)")
+            }
         }
     }
 

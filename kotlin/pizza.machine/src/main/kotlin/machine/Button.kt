@@ -2,14 +2,17 @@ package org.example.machine
 
 import org.example.machine.event.ActivationEvent
 import org.example.machine.listener.ButtonEventListener
+import org.example.menu.Menu
+import org.example.menu.beverage.Beverage
 import org.example.menu.pizza.Pizza
 import org.example.menu.ingredient.Ingredient
+import org.example.menu.side.Side
 
 class Button(
-    val menu: Pizza,
+    val menu: Menu,
     override var isActive: Boolean = false,
 ) : ButtonEventListener {
-    var onPurchaseRequested: ((menu: Pizza) -> Unit)? = null
+    var onPurchaseRequested: ((menu: Menu) -> Unit)? = null
 
     fun isMoneyEnough(insertedMoney: Int): Boolean {
         return insertedMoney >= menu.price
@@ -17,6 +20,10 @@ class Button(
 
     fun isIngredientsEnough(ingredients: List<Ingredient>): Boolean {
         val remainedIngredients = ingredients.toMutableList()
+        // Smart cast menu to Pizza
+        if (menu !is Pizza) {
+            return false // Only Pizza type is supported
+        }
         for (ingredient in menu.ingredients) {
             val found = remainedIngredients.indexOfFirst { it.name == ingredient.name }
             if (found > -1) {
@@ -29,10 +36,18 @@ class Button(
     }
 
     override fun onActivated(e: ActivationEvent) {
-        if (isMoneyEnough(e.insertedMoney) && isIngredientsEnough(e.ingredients)) {
-            isActive = true
-        } else {
-            isActive = false
+        if (menu is Pizza) {
+            if (isMoneyEnough(e.insertedMoney) && isIngredientsEnough(e.ingredients)) {
+                isActive = true
+            } else {
+                isActive = false
+            }
+        } else if (menu is Beverage || menu is Side) {
+            if (isMoneyEnough(e.insertedMoney)) {
+                isActive = true
+            } else {
+                isActive = false
+            }
         }
     }
 
