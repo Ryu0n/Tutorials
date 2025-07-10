@@ -16,6 +16,7 @@ class PizzaMachine(
                 button.menu.ingredients.forEach { ingredients.remove(it) }
                 println("You have purchased ${button.menu.name}.")
                 showRemainedAssets()
+                purchaseAdditionalIngredient()
                 refreshButtonStates()
             }
         }
@@ -30,6 +31,37 @@ class PizzaMachine(
                     ingredients = ingredients,
                 )
             )
+        }
+    }
+
+    fun purchaseAdditionalIngredient() {
+        while (true) {
+            println("Do you want to purchase an additional ingredient? (yes/no)")
+            val input = readLine()?.lowercase()
+            if (input == "no") {
+                println("No additional ingredients purchased.")
+                break
+            } else if (input == "yes") {
+                println("Please enter the name of the ingredient:")
+                val ingredientName = readLine()
+                // Deep copy of ingredients to avoid concurrent modification exception
+                val remainedIngredient = ingredients.toMutableList()
+                for (ingredient in remainedIngredient) {
+                    if (ingredient.name == ingredientName) {
+                        if (insertedMoney < ingredient.price) {
+                            println("Not enough money to purchase $ingredientName. Please insert more money.")
+                            return
+                        }
+                        insertedMoney -= ingredient.price
+                        ingredients.remove(ingredient)
+                        println("Added $ingredient.")
+                        return
+                    }
+                }
+                println("Ingredient $ingredientName not found. Please try another ingredient.")
+            } else {
+                println("Invalid input. Please type 'yes' or 'no'.")
+            }
         }
     }
 
