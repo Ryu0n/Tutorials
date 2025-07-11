@@ -5,6 +5,7 @@ import org.example.menu.beverage.Beverage
 import org.example.menu.ingredient.Ingredient
 import org.example.menu.pizza.Pizza
 import org.example.menu.side.Side
+import org.example.menu.set.Set
 
 class PizzaMachine(
     val delimeterRepeat: Int = 70,
@@ -20,11 +21,19 @@ class PizzaMachine(
                 if (buttonMenu is Pizza) {
                     buttonMenu.ingredients.forEach { ingredients.remove(it) }
                 }
+                if (buttonMenu is Set) {
+                    buttonMenu.menus.forEach { subMenu ->
+                        if (subMenu is Pizza) {
+                            subMenu.ingredients.forEach { ingredients.remove(it) }
+                        }
+                    }
+                }
                 println("You have purchased ${button.menu.name}.")
                 showRemainedAssets()
                 if (buttonMenu is Pizza) {
                     purchaseAdditionalIngredient()
                 }
+                // TODO: Implement a way to add additional ingredient functionality about the purchased set menu
                 refreshButtonStates()
             }
         }
@@ -104,11 +113,11 @@ class PizzaMachine(
             if (!buttons[index].isActive) continue
             val menu = buttons[index].menu
             if (menu is Pizza) {
-                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
+                println("$index. ${menu.name} - Price: ₩${menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
             } else if (menu is Beverage || menu is Side) {
-                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price}")
-            } else {
-                println("$index. ${buttons[index].menu.name} - Price: ₩${buttons[index].menu.price} (Unknown type)")
+                println("$index. ${menu.name} - Price: ₩${menu.price}")
+            } else if (menu is Set) {
+                println("$index. ${menu.name} - Price: ₩${menu.price} (Menus: ${menu.menus.joinToString(", ") { it.name }})")
             }
         }
     }

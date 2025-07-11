@@ -7,6 +7,7 @@ import org.example.menu.beverage.Beverage
 import org.example.menu.pizza.Pizza
 import org.example.menu.ingredient.Ingredient
 import org.example.menu.side.Side
+import org.example.menu.set.Set
 
 class Button(
     val menu: Menu,
@@ -18,7 +19,7 @@ class Button(
         return insertedMoney >= menu.price
     }
 
-    fun isIngredientsEnough(ingredients: List<Ingredient>): Boolean {
+    fun isPizzaIngredientsEnough(ingredients: List<Ingredient>): Boolean {
         val remainedIngredients = ingredients.toMutableList()
         // Smart cast menu to Pizza
         if (menu !is Pizza) {
@@ -35,15 +36,42 @@ class Button(
         return true
     }
 
+    fun isSetIngredientsEnough(ingredients: List<Ingredient>): Boolean {
+        if (menu !is Set) {
+            return false // Only Set type is supported
+        }
+        var requiredIngredients = emptyList<Ingredient>()
+        val remainedIngredients = ingredients.toMutableList()
+        for (subMenu in menu.menus) {
+            if (subMenu !is Pizza) continue
+            requiredIngredients = requiredIngredients + subMenu.ingredients
+        }
+        for (ingredient in requiredIngredients) {
+            val found = remainedIngredients.indexOfFirst { it.name == ingredient.name }
+            if (found > -1) {
+                remainedIngredients.removeAt(found)
+            } else {
+                return false // Not enough ingredients
+            }
+        }
+        return true
+    }
+
     override fun onActivated(e: ActivationEvent) {
         if (menu is Pizza) {
-            if (isMoneyEnough(e.insertedMoney) && isIngredientsEnough(e.ingredients)) {
+            if (isMoneyEnough(e.insertedMoney) && isPizzaIngredientsEnough(e.ingredients)) {
                 isActive = true
             } else {
                 isActive = false
             }
         } else if (menu is Beverage || menu is Side) {
             if (isMoneyEnough(e.insertedMoney)) {
+                isActive = true
+            } else {
+                isActive = false
+            }
+        } else if (menu is Set) {
+            if (isMoneyEnough(e.insertedMoney) && isSetIngredientsEnough(e.ingredients)) {
                 isActive = true
             } else {
                 isActive = false

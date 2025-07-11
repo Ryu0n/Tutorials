@@ -10,6 +10,8 @@ import org.example.menu.pizza.PepperoniPizza
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
 import org.example.menu.ingredient.Pepperoni
+import org.example.menu.set.CheeseCoffeeSet
+import org.example.menu.set.CheeseColaSet
 import org.example.menu.side.Potato
 import org.example.menu.side.Salad
 
@@ -50,7 +52,13 @@ fun main() {
         ),
         Button(
             menu = Salad()
-        )
+        ),
+        Button(
+            menu = CheeseColaSet()
+        ),
+        Button(
+            menu = CheeseCoffeeSet()
+        ),
     )
     val machine = PizzaMachine(
         buttons = buttons,
