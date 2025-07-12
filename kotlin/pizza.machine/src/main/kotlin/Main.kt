@@ -14,6 +14,9 @@ import org.example.menu.set.CheeseCoffeeSet
 import org.example.menu.set.CheeseColaSet
 import org.example.menu.side.Potato
 import org.example.menu.side.Salad
+import org.example.promotion.DoubleCheesePromotion
+import org.example.promotion.Promotion
+import java.time.LocalDateTime
 
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
@@ -60,9 +63,16 @@ fun main() {
             menu = CheeseCoffeeSet()
         ),
     )
+    val promotions: MutableList<Promotion> = mutableListOf(
+        DoubleCheesePromotion(
+            startDate = LocalDateTime.of(2025, 7, 1, 0, 0),
+            period = 30,
+        ),
+    )
     val machine = PizzaMachine(
         buttons = buttons,
         ingredients = ingredients,
+        promotions=promotions,
     )
 
     machine.showAvailableMenu()

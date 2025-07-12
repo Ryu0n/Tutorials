@@ -2,22 +2,41 @@ package org.example.machine
 
 import org.example.machine.event.ActivationEvent
 import org.example.menu.beverage.Beverage
+import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Ingredient
 import org.example.menu.pizza.Pizza
 import org.example.menu.side.Side
 import org.example.menu.set.Set
+import org.example.promotion.DoubleCheesePromotion
+import org.example.promotion.Promotion
 
 class PizzaMachine(
     val delimeterRepeat: Int = 70,
     var insertedMoney: Int = 0,
     val buttons: MutableList<Button>,
     val ingredients: MutableList<Ingredient>,
+    val promotions: MutableList<Promotion>,
 ) {
     init {
         buttons.forEach { button ->
             button.onPurchaseRequested = { menu ->
                 insertedMoney -= menu.price
                 if (menu is Pizza) {
+                    for (promotion in promotions) {
+                        if (promotion is DoubleCheesePromotion && promotion.isApplicable(menu, ingredients)) {
+                            // Apply the promotion with 50% probability
+                            if ( (0..9).random() < 5) {
+                                println("Congratulations! \uD83C\uDF89 [${promotion.name}] applied!.")
+                                menu.ingredients.count { it.name == "Cheese" }.let { cheeseCount ->
+                                    val additionalCheeses: MutableList<Ingredient> = mutableListOf()
+                                    for (i in 0 until (cheeseCount * 2)) {
+                                        additionalCheeses.add(Cheese())
+                                    }
+                                    menu.ingredients.addAll(additionalCheeses)
+                                }
+                            }
+                        }
+                    }
                     menu.ingredients.forEach { ingredients.remove(it) }
                 }
                 if (menu is Set) {
@@ -27,12 +46,11 @@ class PizzaMachine(
                         }
                     }
                 }
-                println("You have purchased ${button.menu.name}.")
+                println("You have purchased [${button.menu.name}].")
                 showRemainedAssets()
                 if (menu is Pizza) {
                     purchaseAdditionalIngredient()
                 }
-                // TODO: Implement a way to add additional ingredient functionality about the purchased set menu
                 refreshButtonStates()
             }
         }

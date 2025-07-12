@@ -81,7 +81,7 @@ class Button(
 
     override fun onPressed() {
         if (!isActive) {
-            println("Button for ${menu.name} is not active. Please check your inserted money or available ingredients.")
+            println("Button for [${menu.name}] is not active. Please check your inserted money or available ingredients.")
             return
         }
 
