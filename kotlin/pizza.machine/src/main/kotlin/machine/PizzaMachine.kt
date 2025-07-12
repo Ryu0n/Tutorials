@@ -16,13 +16,12 @@ class PizzaMachine(
     init {
         buttons.forEach { button ->
             button.onPurchaseRequested = { menu ->
-                insertedMoney -= button.menu.price
-                val buttonMenu = button.menu
-                if (buttonMenu is Pizza) {
-                    buttonMenu.ingredients.forEach { ingredients.remove(it) }
+                insertedMoney -= menu.price
+                if (menu is Pizza) {
+                    menu.ingredients.forEach { ingredients.remove(it) }
                 }
-                if (buttonMenu is Set) {
-                    buttonMenu.menus.forEach { subMenu ->
+                if (menu is Set) {
+                    menu.menus.forEach { subMenu ->
                         if (subMenu is Pizza) {
                             subMenu.ingredients.forEach { ingredients.remove(it) }
                         }
@@ -30,7 +29,7 @@ class PizzaMachine(
                 }
                 println("You have purchased ${button.menu.name}.")
                 showRemainedAssets()
-                if (buttonMenu is Pizza) {
+                if (menu is Pizza) {
                     purchaseAdditionalIngredient()
                 }
                 // TODO: Implement a way to add additional ingredient functionality about the purchased set menu
