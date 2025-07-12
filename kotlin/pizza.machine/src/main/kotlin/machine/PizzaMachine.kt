@@ -71,7 +71,7 @@ class PizzaMachine(
                         insertedMoney -= ingredient.price
                         ingredients.remove(ingredient)
                         println("Added $ingredient.")
-                        return
+                        break
                     }
                 }
                 println("Ingredient $ingredientName not found. Please try another ingredient.")
