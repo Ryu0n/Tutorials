@@ -158,4 +158,12 @@ fun main() {
     child.foo()
     child.bar()
     println(child.propertyWithImplementation)
+
+    val person = People("Adam").apply {
+        age = 32
+        city = "London"
+        printName()
+        this.printName()
+    }
+    println("Person: ${person.name}, Age: ${person.age}, City: ${person.city}")
 }
