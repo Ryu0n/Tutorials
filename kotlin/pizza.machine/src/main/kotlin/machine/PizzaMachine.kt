@@ -11,33 +11,53 @@ import org.example.promotion.DoubleCheesePromotion
 import org.example.promotion.Promotion
 
 class PizzaMachine(
-    val delimeterRepeat: Int = 70,
+    val delimeterRepeat: Int = 100,
     var insertedMoney: Int = 0,
     val buttons: MutableList<Button>,
     val ingredients: MutableList<Ingredient>,
     val promotions: MutableList<Promotion>,
 ) {
+    val menuEmojiMap = mutableMapOf<String, String>(
+        "Pizza" to "🍕",
+        "Beverage" to "☕️",
+        "Side" to "🍟",
+        "Set" to "🍽",
+    )
+    val ingredientEmojiMap = mutableMapOf<String, String>(
+        "Cheese" to "🧀",
+        "Pepperoni" to "🍕",
+        "Dough" to "🍞",
+    )
+
+    fun applyPromotion(promotion: Promotion, menu: Pizza): MutableList<Ingredient> {
+        // Shallow copy
+        val appliedIngredients = mutableListOf<Ingredient>()
+        menu.ingredients.forEach { ingredient ->
+            appliedIngredients.add(ingredient)
+        }
+        if (promotion is DoubleCheesePromotion && promotion.isApplicable(menu, ingredients)) {
+            // Apply the promotion with 40% probability
+            if ((0..9).random() < 7) {
+                val cheeseCount = menu.ingredients.count { it.name == "Cheese" }
+                println("[🥳] Congratulations! [${promotion.name}] applied!. (Added $cheeseCount 🧀 by promotion)")
+                appliedIngredients.addAll( List(cheeseCount) { Cheese() })
+            }
+        }
+        return appliedIngredients
+    }
+
     init {
         buttons.forEach { button ->
             button.onPurchaseRequested = { menu ->
                 insertedMoney -= menu.price
                 if (menu is Pizza) {
+                    val requiredIngredients = mutableListOf<Ingredient>()
                     for (promotion in promotions) {
-                        if (promotion is DoubleCheesePromotion && promotion.isApplicable(menu, ingredients)) {
-                            // Apply the promotion with 50% probability
-                            if ( (0..9).random() < 5) {
-                                println("Congratulations! \uD83C\uDF89 [${promotion.name}] applied!.")
-                                menu.ingredients.count { it.name == "Cheese" }.let { cheeseCount ->
-                                    val additionalCheeses: MutableList<Ingredient> = mutableListOf()
-                                    for (i in 0 until (cheeseCount * 2)) {
-                                        additionalCheeses.add(Cheese())
-                                    }
-                                    menu.ingredients.addAll(additionalCheeses)
-                                }
-                            }
-                        }
+                        requiredIngredients.addAll(
+                            applyPromotion(promotion, menu)
+                        )
                     }
-                    menu.ingredients.forEach { ingredients.remove(it) }
+                    requiredIngredients.forEach { ingredients.remove(it) }
                 }
                 if (menu is Set) {
                     menu.menus.forEach { subMenu ->
@@ -46,7 +66,7 @@ class PizzaMachine(
                         }
                     }
                 }
-                println("You have purchased [${button.menu.name}].")
+                println("[💰] You have purchased [${button.menu.name}].")
                 showRemainedAssets()
                 if (menu is Pizza) {
                     purchaseAdditionalIngredient()
@@ -70,71 +90,79 @@ class PizzaMachine(
 
     fun purchaseAdditionalIngredient() {
         while (true) {
-            println("Do you want to purchase an additional ingredient? (yes/no)")
+            println("[🍳] Do you want to purchase an additional ingredient? (yes/no)")
             val input = readLine()?.lowercase()
             if (input == "no") {
-                println("No additional ingredients purchased.")
+                println("[😂] No additional ingredients purchased.")
                 break
             } else if (input == "yes") {
-                println("Please enter the name of the ingredient:")
+                println("[🍳] Please enter the name of the ingredient:")
                 val ingredientName = readLine()
-                // Deep copy of ingredients to avoid concurrent modification exception
+                // Copy of ingredients to avoid concurrent modification exception
                 val remainedIngredient = ingredients.toMutableList()
                 for (ingredient in remainedIngredient) {
                     if (ingredient.name == ingredientName) {
                         if (insertedMoney < ingredient.price) {
-                            println("Not enough money to purchase $ingredientName. Please insert more money.")
+                            println("[❌] Not enough money to purchase $ingredientName. Please insert more money.")
                             return
                         }
                         insertedMoney -= ingredient.price
                         ingredients.remove(ingredient)
-                        println("Added $ingredient.")
+                        println("[🍳] Purchase complete! Added $ingredient.")
                         break
                     }
                 }
-                println("Ingredient $ingredientName not found. Please try another ingredient.")
+                if (remainedIngredient.none { it.name == ingredientName }) {
+                    println("[❌] Ingredient $ingredientName not found. Please try another ingredient.")
+                }
             } else {
-                println("Invalid input. Please type 'yes' or 'no'.")
+                println("[❌] Invalid input. Please type 'yes' or 'no'.")
             }
         }
     }
 
     fun onMoneyInserted() {
         println("\n" + "=".repeat(delimeterRepeat))
-        println("Insert money ($):")
+        println("[💰] Please insert money (₩):")
         val money = readLine()?.toIntOrNull()
 
         money?.let {
             if (it < 0) {
-                println("Please insert a valid amount of money.")
+                return println("[❌] Please insert a valid amount of money.")
             }
         }
-
         insertedMoney += money ?: 0
         refreshButtonStates()
     }
 
     fun showRemainedAssets(): Unit {
-        println("Current inserted money: ₩$insertedMoney")
-        println("Remained ingredients:")
+        println("[💵] Current inserted money: ₩$insertedMoney")
+        println("[🍳] Remained ingredients:")
+        val ingredientCountMap = mutableMapOf<String, Int>()
         for (ingredient in ingredients) {
-            println("- ${ingredient.name} (Price: ₩${ingredient.price})")
+            ingredientCountMap[ingredient.name] = ingredientCountMap.getOrDefault(ingredient.name, 0) + 1
+        }
+        for (ingredientCount in ingredientCountMap) {
+
+            println("- ${ingredientEmojiMap.get(ingredientCount.key)} ${ingredientCount.key} (Count: ${ingredientCount.value})")
         }
     }
 
-    fun showAvailableMenu(): Unit {
+    fun showAvailableMenu() {
         println("\n" + "=".repeat(delimeterRepeat))
         showRemainedAssets()
-        println("Current available buttons as below:")
+        println("[🔴] Current available buttons as below:")
         for (index in buttons.indices) {
             if (!buttons[index].isActive) continue
             val menu = buttons[index].menu
             if (menu is Pizza) {
-                println("$index. ${menu.name} - Price: ₩${menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
-            } else if (menu is Beverage || menu is Side) {
-                println("$index. ${menu.name} - Price: ₩${menu.price}")
+                println("$index. ${menuEmojiMap["Pizza"]} ${menu.name} - Price: ₩${menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
+            } else if (menu is Beverage) {
+                println("$index. ${menuEmojiMap["Beverage"]}️ ${menu.name} - Price: ₩${menu.price}")
+            } else if (menu is Side) {
+                println("$index. ${menuEmojiMap["Side"]} ${menu.name} - Price: ₩${menu.price}")
             } else if (menu is Set) {
-                println("$index. ${menu.name} - Price: ₩${menu.price} (Menus: ${menu.menus.joinToString(", ") { it.name }})")
+                println("$index. ${menuEmojiMap["Set"]}️ ${menu.name} - Price: ₩${menu.price} (Menus: ${menu.menus.joinToString(", ") { it.name }})")
             }
         }
     }
@@ -150,13 +178,13 @@ class PizzaMachine(
         val (div500, mod500) = divMod(mod1000, 500)
         val (div100, mod100) = divMod(mod500, 100)
 
-        println("You have received ₩$insertedMoney :")
-        println("$div10000 x ₩10000, $div5000 x ₩5000, $div1000 x ₩1000, $div500 x ₩500, $div100 x ₩100, and ₩$mod100 as change.")
+        println("[💰] You have received ₩$insertedMoney :")
+        println("$div10000 x ₩10000 | $div5000 x ₩5000 | $div1000 x ₩1000 | $div500 x ₩500 | $div100 x ₩100 | and ₩$mod100 as change.")
     }
 
     fun onButtonSelected(): Int {
         println("\n" + "=".repeat(delimeterRepeat))
-        print("Please select a button by index (or type 'exit' to quit): ")
+        print("[🔴] Please select a button by index (or type 'exit' to quit): ")
         val input = readLine()
         if (input == null || input.lowercase() == "exit") {
             returnChange()

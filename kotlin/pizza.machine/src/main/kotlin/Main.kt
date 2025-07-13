@@ -9,6 +9,7 @@ import org.example.menu.pizza.CheesePizza
 import org.example.menu.pizza.PepperoniPizza
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
+import org.example.menu.ingredient.Ingredient
 import org.example.menu.ingredient.Pepperoni
 import org.example.menu.set.CheeseCoffeeSaladSet
 import org.example.menu.set.CheeseColaPotatoSet
@@ -21,47 +22,20 @@ import java.time.LocalDateTime
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
 fun main() {
-    val ingredients = mutableListOf(
-        Dough(),
-        Dough(),
-        Dough(),
-        Dough(),
-        Dough(),
-        Cheese(),
-        Cheese(),
-        Cheese(),
-        Cheese(),
-        Pepperoni(),
-        Pepperoni(),
-    )
+    val ingredients = mutableListOf<Ingredient>()
+        .apply { addAll(List(20) { Dough() }) }
+        .apply { addAll(List(20) { Cheese() }) }
+        .apply { addAll(List(20) { Pepperoni() }) }
     val buttons = mutableListOf(
-        Button(
-            menu = CheesePizza()
-        ),
-        Button(
-            menu = PepperoniPizza()
-        ),
-        Button(
-            menu = CheesePepperoniPizza()
-        ),
-        Button(
-            menu = Cola()
-        ),
-        Button(
-            menu = Coffee()
-        ),
-        Button(
-            menu = Potato()
-        ),
-        Button(
-            menu = Salad()
-        ),
-        Button(
-            menu = CheeseColaPotatoSet()
-        ),
-        Button(
-            menu = CheeseCoffeeSaladSet()
-        ),
+        Button(menu = CheeseColaPotatoSet()),
+        Button(menu = CheeseCoffeeSaladSet()),
+        Button(menu = CheesePizza()),
+        Button(menu = PepperoniPizza()),
+        Button(menu = CheesePepperoniPizza()),
+        Button(menu = Potato()),
+        Button(menu = Salad()),
+        Button(menu = Cola()),
+        Button(menu = Coffee()),
     )
     val promotions: MutableList<Promotion> = mutableListOf(
         DoubleCheesePromotion(
