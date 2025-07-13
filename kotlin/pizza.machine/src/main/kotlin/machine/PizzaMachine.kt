@@ -36,8 +36,8 @@ class PizzaMachine(
             appliedIngredients.add(ingredient)
         }
         if (promotion is DoubleCheesePromotion && promotion.isApplicable(menu, ingredients)) {
-            // Apply the promotion with 40% probability
-            if ((0..9).random() < 7) {
+            // Apply the promotion with 50% probability
+            if ((0..9).random() < 5) {
                 val cheeseCount = menu.ingredients.count { it.name == "Cheese" }
                 println("[🥳] Congratulations! [${promotion.name}] applied!. (Added $cheeseCount 🧀 by promotion)")
                 appliedIngredients.addAll( List(cheeseCount) { Cheese() })
