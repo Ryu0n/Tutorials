@@ -96,6 +96,7 @@ class PizzaMachine(
                 println("[😂] No additional ingredients purchased.")
                 break
             } else if (input == "yes") {
+                showRemainedIngredients()
                 println("[🍳] Please enter the name of the ingredient:")
                 val ingredientName = readLine()
                 // Copy of ingredients to avoid concurrent modification exception
@@ -135,17 +136,20 @@ class PizzaMachine(
         refreshButtonStates()
     }
 
-    fun showRemainedAssets(): Unit {
-        println("[💵] Current inserted money: ₩$insertedMoney")
+    fun showRemainedIngredients() {
         println("[🍳] Remained ingredients:")
         val ingredientCountMap = mutableMapOf<String, Int>()
         for (ingredient in ingredients) {
             ingredientCountMap[ingredient.name] = ingredientCountMap.getOrDefault(ingredient.name, 0) + 1
         }
         for (ingredientCount in ingredientCountMap) {
-
-            println("- ${ingredientEmojiMap.get(ingredientCount.key)} ${ingredientCount.key} (Count: ${ingredientCount.value})")
+            println("- ${ingredientEmojiMap[ingredientCount.key]} ${ingredientCount.key} (Count: ${ingredientCount.value}), Price: ₩${ingredients.firstOrNull { it.name == ingredientCount.key }?.price ?: 0})")
         }
+    }
+    
+    fun showRemainedAssets() {
+        println("[💵] Current inserted money: ₩$insertedMoney")
+        showRemainedIngredients()
     }
 
     fun showAvailableMenu() {
