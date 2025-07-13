@@ -2,11 +2,13 @@ package org.example.menu.set
 
 import org.example.menu.beverage.Coffee
 import org.example.menu.pizza.CheesePizza
+import org.example.menu.side.Salad
 
-class CheeseCoffeeSet : Set(
-    name = "Cheese Coffee Set",
+class CheeseCoffeeSaladSet : Set(
+    name = "Cheese Coffee Salad Set",
     menus = listOf(
         CheesePizza(),
-        Coffee()
+        Coffee(),
+        Salad()
     )
 )

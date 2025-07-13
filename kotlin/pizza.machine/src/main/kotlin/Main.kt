@@ -10,8 +10,8 @@ import org.example.menu.pizza.PepperoniPizza
 import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Dough
 import org.example.menu.ingredient.Pepperoni
-import org.example.menu.set.CheeseCoffeeSet
-import org.example.menu.set.CheeseColaSet
+import org.example.menu.set.CheeseCoffeeSaladSet
+import org.example.menu.set.CheeseColaPotatoSet
 import org.example.menu.side.Potato
 import org.example.menu.side.Salad
 import org.example.promotion.DoubleCheesePromotion
@@ -57,10 +57,10 @@ fun main() {
             menu = Salad()
         ),
         Button(
-            menu = CheeseColaSet()
+            menu = CheeseColaPotatoSet()
         ),
         Button(
-            menu = CheeseCoffeeSet()
+            menu = CheeseCoffeeSaladSet()
         ),
     )
     val promotions: MutableList<Promotion> = mutableListOf(
