@@ -2,16 +2,16 @@ package org.example.packet
 
 
 
-fun serialize(packet: Packet): ByteArray {
+fun serialize(packet: SimplePacket): ByteArray {
     val body = packet.message.toByteArray(Charsets.UTF_8)
     return body
 }
 
-fun deserialize(bytes: ByteArray): Packet {
+fun deserialize(bytes: ByteArray): SimplePacket {
     val body = bytes.toString(Charsets.UTF_8)
-    return Packet(body)
+    return SimplePacket(body)
 }
 
-data class Packet (
+data class SimplePacket (
     val message: String
 )
