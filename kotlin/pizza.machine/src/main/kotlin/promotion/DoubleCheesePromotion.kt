@@ -9,8 +9,9 @@ class DoubleCheesePromotion(
     override val name: String = "Double Cheese Promotion",
     override val startDate: LocalDateTime = LocalDateTime.of(2023, 10, 1, 0, 0),
     override val period: Int = 30,
+    override val probability: Int = 50,
 ): Promotion {
-    fun isApplicable(pizza: Pizza, remainedIngredients: List<Ingredient>): Boolean {
+    override fun isApplicable(pizza: Pizza, remainedIngredients: List<Ingredient>): Boolean {
         if (!isActive()) {
             println("Promotion [$name] is not active.")
             return false
@@ -28,5 +29,20 @@ class DoubleCheesePromotion(
         }
         println("Pizza does not contain cheese, [${name}] cannot be applied.")
         return false
+    }
+
+    override fun apply(pizza: Pizza, remainedIngredients: MutableList<Ingredient>): List<Ingredient> {
+        val pizzaIngredients = mutableListOf<Ingredient>()
+        for (ingredient in pizza.ingredients) {
+            pizzaIngredients.add(ingredient)
+        }
+        if (isApplicable(pizza, remainedIngredients) && (0..99).random() < probability) {
+            val cheeseCount = pizza.ingredients.count { it is Cheese }
+            println("[🥳] Congratulations! [${name}] applied!. (Added $cheeseCount 🧀 by promotion)")
+            return pizzaIngredients + List(cheeseCount) { Cheese() }
+        } else {
+            println("Promotion [${name}] cannot be applied.")
+            return pizzaIngredients
+        }
     }
 }

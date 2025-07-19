@@ -29,23 +29,6 @@ class PizzaMachine(
         "Dough" to "🍞",
     )
 
-    fun applyPromotion(promotion: Promotion, menu: Pizza): MutableList<Ingredient> {
-        // Shallow copy
-        val appliedIngredients = mutableListOf<Ingredient>()
-        menu.ingredients.forEach { ingredient ->
-            appliedIngredients.add(ingredient)
-        }
-        if (promotion is DoubleCheesePromotion && promotion.isApplicable(menu, ingredients)) {
-            // Apply the promotion with 50% probability
-            if ((0..9).random() < 5) {
-                val cheeseCount = menu.ingredients.count { it.name == "Cheese" }
-                println("[🥳] Congratulations! [${promotion.name}] applied!. (Added $cheeseCount 🧀 by promotion)")
-                appliedIngredients.addAll( List(cheeseCount) { Cheese() })
-            }
-        }
-        return appliedIngredients
-    }
-
     init {
         buttons.forEach { button ->
             button.onPurchaseRequested = { menu ->
@@ -54,7 +37,7 @@ class PizzaMachine(
                     val requiredIngredients = mutableListOf<Ingredient>()
                     for (promotion in promotions) {
                         requiredIngredients.addAll(
-                            applyPromotion(promotion, menu)
+                            promotion.apply(menu, ingredients)
                         )
                     }
                     requiredIngredients.forEach { ingredients.remove(it) }
