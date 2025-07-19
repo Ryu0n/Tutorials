@@ -4,7 +4,6 @@ import org.example.menu.Menu
 
 open class Set(
     override val name: String,
+    override val price: Int,
     val menus: List<Menu>,
-): Menu(name) {
-    override val price: Int = menus.sumOf { it.price }
-}
+): Menu(name, price)

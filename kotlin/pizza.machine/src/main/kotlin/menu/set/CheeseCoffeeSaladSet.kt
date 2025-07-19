@@ -6,6 +6,7 @@ import org.example.menu.side.Salad
 
 class CheeseCoffeeSaladSet : Set(
     name = "Cheese Coffee Salad Set",
+    price = 10000,
     menus = listOf(
         CheesePizza(),
         Coffee(),

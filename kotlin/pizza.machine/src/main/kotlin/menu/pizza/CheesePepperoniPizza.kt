@@ -6,6 +6,7 @@ import org.example.menu.ingredient.Pepperoni
 
 class CheesePepperoniPizza : Pizza(
     name = "Cheese Pepperoni Pizza",
+    price = 10000,
     ingredients = mutableListOf(
         Dough(),
         Cheese(),
