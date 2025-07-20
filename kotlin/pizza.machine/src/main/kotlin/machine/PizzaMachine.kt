@@ -2,12 +2,10 @@ package org.example.machine
 
 import org.example.machine.event.ActivationEvent
 import org.example.menu.beverage.Beverage
-import org.example.menu.ingredient.Cheese
 import org.example.menu.ingredient.Ingredient
 import org.example.menu.pizza.Pizza
 import org.example.menu.side.Side
 import org.example.menu.set.Set
-import org.example.promotion.DoubleCheesePromotion
 import org.example.promotion.Promotion
 
 class PizzaMachine(
@@ -15,6 +13,7 @@ class PizzaMachine(
     var insertedMoney: Int = 0,
     val buttons: MutableList<Button>,
     val ingredients: MutableList<Ingredient>,
+    val sides: MutableList<Side>,
     val promotions: MutableList<Promotion>,
 ) {
     val menuEmojiMap = mutableMapOf<String, String>(
@@ -27,6 +26,10 @@ class PizzaMachine(
         "Cheese" to "🧀",
         "Pepperoni" to "🍕",
         "Dough" to "🍞",
+    )
+    val sideEmojiMap = mutableMapOf<String, String>(
+        "Potato" to "🥔",
+        "Salad" to "🥗",
     )
 
     init {
@@ -49,6 +52,9 @@ class PizzaMachine(
                         }
                     }
                 }
+                if (menu is Side) {
+                    sides.remove(menu)
+                }
                 println("[💰] You have purchased [${button.menu.name}].")
                 showRemainedAssets()
                 if (menu is Pizza) {
@@ -66,6 +72,7 @@ class PizzaMachine(
                 ActivationEvent(
                     insertedMoney = insertedMoney,
                     ingredients = ingredients,
+                    sides = sides,
                 )
             )
         }
@@ -129,10 +136,22 @@ class PizzaMachine(
             println("- ${ingredientEmojiMap[ingredientCount.key]} ${ingredientCount.key} (Count: ${ingredientCount.value}), Price: ₩${ingredients.firstOrNull { it.name == ingredientCount.key }?.price ?: 0})")
         }
     }
+
+    fun showRemainedSides() {
+        println("[🍟] Remained sides:")
+        val sideCountMap = mutableMapOf<String, Int>()
+        for (side in sides) {
+            sideCountMap[side.name] = sideCountMap.getOrDefault(side.name, 0) + 1
+        }
+        for (sideCount in sideCountMap) {
+            println("- ${sideEmojiMap[sideCount.key]} ${sideCount.key} (Count: ${sideCount.value}), Price: ₩${sides.firstOrNull { it.name == sideCount.key }?.price ?: 0})")
+        }
+    }
     
     fun showRemainedAssets() {
         println("[💵] Current inserted money: ₩$insertedMoney")
         showRemainedIngredients()
+        showRemainedSides()
     }
 
     fun showAvailableMenu() {

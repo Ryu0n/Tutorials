@@ -15,6 +15,7 @@ import org.example.menu.set.CheeseCoffeeSaladSet
 import org.example.menu.set.CheeseColaPotatoSet
 import org.example.menu.side.Potato
 import org.example.menu.side.Salad
+import org.example.menu.side.Side
 import org.example.promotion.DoubleCheesePromotion
 import org.example.promotion.Promotion
 import java.time.LocalDateTime
@@ -26,6 +27,10 @@ fun main() {
         .apply { addAll(List(20) { Dough() }) }
         .apply { addAll(List(20) { Cheese() }) }
         .apply { addAll(List(20) { Pepperoni() }) }
+    val sides = mutableListOf<Side>()
+        .apply { addAll(List(20) { Potato() }) }
+        .apply { addAll(List(20) { Salad() }) }
+
     val buttons = mutableListOf(
         Button(menu = CheeseColaPotatoSet()),
         Button(menu = CheeseCoffeeSaladSet()),
@@ -47,6 +52,7 @@ fun main() {
         buttons = buttons,
         ingredients = ingredients,
         promotions=promotions,
+        sides = sides,
     )
 
     machine.showAvailableMenu()
