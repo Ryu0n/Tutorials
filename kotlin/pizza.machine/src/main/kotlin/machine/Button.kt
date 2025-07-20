@@ -58,24 +58,15 @@ class Button(
     }
 
     override fun onActivated(e: ActivationEvent) {
-        if (menu is Pizza) {
-            if (isMoneyEnough(e.insertedMoney) && isPizzaIngredientsEnough(e.ingredients)) {
-                isActive = true
-            } else {
-                isActive = false
-            }
+        isActive = false
+        if (menu is Pizza && isMoneyEnough(e.insertedMoney) && isPizzaIngredientsEnough(e.ingredients)) {
+            isActive = true
         } else if (menu is Beverage || menu is Side) {
             if (isMoneyEnough(e.insertedMoney)) {
                 isActive = true
-            } else {
-                isActive = false
             }
-        } else if (menu is Set) {
-            if (isMoneyEnough(e.insertedMoney) && isSetIngredientsEnough(e.ingredients)) {
-                isActive = true
-            } else {
-                isActive = false
-            }
+        } else if (menu is Set && isMoneyEnough(e.insertedMoney) && isSetIngredientsEnough(e.ingredients)) {
+            isActive = true
         }
     }
 
@@ -84,7 +75,6 @@ class Button(
             println("Button for [${menu.name}] is not active. Please check your inserted money or available ingredients.")
             return
         }
-
         onPurchaseRequested?.invoke(menu)
     }
 }
