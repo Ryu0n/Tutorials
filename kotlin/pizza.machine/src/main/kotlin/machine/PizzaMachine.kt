@@ -30,6 +30,13 @@ class PizzaMachine(
     val sideEmojiMap = mutableMapOf<String, String>(
         "Potato" to "🥔",
         "Salad" to "🥗",
+        "Hot Wing" to "🍗",
+        "Cheese Ball" to "🧀",
+    )
+    val beverageEmojiMap = mutableMapOf<String, String>(
+        "Cola" to "🥤",
+        "Coffee" to "☕️",
+        "Beer" to "🍺",
     )
 
     init {
@@ -165,13 +172,13 @@ class PizzaMachine(
             if (!buttons[index].isActive) continue
             val menu = buttons[index].menu
             if (menu is Pizza) {
-                println("$index. ${menuEmojiMap["Pizza"]} ${menu.name} - Price: ₩${menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
+                println("$index. [PIZZA] ${menuEmojiMap["Pizza"]} ${menu.name} - Price: ₩${menu.price} (Ingredients: ${menu.ingredients.joinToString(", ") { it.name }})")
             } else if (menu is Beverage) {
-                println("$index. ${menuEmojiMap["Beverage"]}️ ${menu.name} - Price: ₩${menu.price}")
+                println("$index. [BEVERAGE] ${beverageEmojiMap[menu.name]}️ ${menu.name} - Price: ₩${menu.price}")
             } else if (menu is Side) {
-                println("$index. ${menuEmojiMap["Side"]} ${menu.name} - Price: ₩${menu.price}")
+                println("$index. [SIDE DISH] ${sideEmojiMap[menu.name]} ${menu.name} - Price: ₩${menu.price}")
             } else if (menu is Set) {
-                println("$index. ${menuEmojiMap["Set"]}️ ${menu.name} - Price: ₩${menu.price} (Menus: ${menu.menus.joinToString(", ") { it.name }})")
+                println("$index. [SET MENU] ${menuEmojiMap["Set"]}️ ${menu.name} - Price: ₩${menu.price} (Menus: ${menu.menus.joinToString(", ") { it.name }})")
             }
         }
     }
@@ -198,8 +205,18 @@ class PizzaMachine(
         if (input == null || input.lowercase() == "exit") {
             returnChange()
             println("Exiting the machine. Thank you!")
-            return -1 // Indicating exit
+            return -2 // Indicating exit
         }
-        return input.toInt()
+        try {
+            val index = input.toInt()
+            if (index < 0 || index >= buttons.size || !buttons[index].isActive) {
+                println("[❌] Invalid button index. Please try again.")
+                return -1
+            }
+            return index
+        } catch (e: NumberFormatException) {
+            println("[❌] Invalid input. Please enter a valid number.")
+            return -1
+        }
     }
 }
