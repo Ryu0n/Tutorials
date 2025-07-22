@@ -12,7 +12,6 @@ class Application(
     override fun run(vararg args: String?) {
         println("Starting Omok server...")
         multiThreadServer.start()
-        println("Omok server started.")
     }
 }
 

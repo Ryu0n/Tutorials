@@ -6,4 +6,12 @@ class Player (
     val id: String,
     val socket: Socket,
 ) {
+    fun sendMessage(message: String) {
+        try {
+            socket.getOutputStream().write(("$id : $message\n").toByteArray())
+            socket.getOutputStream().flush()
+        } catch (e: Exception) {
+            println("Error sending message to player $id: ${e.message}")
+        }
+    }
 }
