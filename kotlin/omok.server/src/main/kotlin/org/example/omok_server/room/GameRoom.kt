@@ -20,5 +20,8 @@ class GameRoom : Room {
     }
 
     override fun broadcast(message: String) {
+        for (player in players) {
+            player.sendMessage(message)
+        }
     }
 }
