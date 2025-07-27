@@ -1,5 +1,9 @@
 package org.example.omok_server.room
 
+
+import org.example.omok_server.packet.NotifyPacket
+import org.example.omok_server.packet.Packet
+import org.example.omok_server.packet.data.NotifyPacketData
 import org.example.omok_server.player.Player
 
 class WaitingRoom : Room {
@@ -7,17 +11,29 @@ class WaitingRoom : Room {
 
     override fun addPlayer(player: Player) {
         players.add(player)
-        broadcast("${player.id} has joined the waiting room.")
+        broadcast(
+            NotifyPacket(
+                NotifyPacketData(
+                    listOf("${player.id} has joined the waiting room.")
+                )
+            )
+        )
     }
 
     override fun removePlayer(player: Player) {
         players.remove(player)
-        broadcast("${player.id} has left the waiting room.")
+        broadcast(
+            NotifyPacket(
+                NotifyPacketData(
+                    listOf("${player.id} has left the waiting room.")
+                )
+            )
+        )
     }
 
-    override fun broadcast(message: String) {
+    override fun broadcast(packet: Packet) {
         for (player in players) {
-            player.sendMessage(message)
+            player.send(packet)
         }
     }
 }

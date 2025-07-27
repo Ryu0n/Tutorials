@@ -1,5 +1,6 @@
 package org.example.omok_server.room
 
+import org.example.omok_server.packet.Packet
 import org.example.omok_server.player.Player
 
 interface Room {
@@ -7,5 +8,5 @@ interface Room {
 
     fun addPlayer(player: Player)
     fun removePlayer(player: Player)
-    fun broadcast(message: String)
+    fun broadcast(packet: Packet)
 }
