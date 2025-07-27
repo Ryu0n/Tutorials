@@ -1,6 +1,5 @@
 package org.example.omok_server.servers
 
-import org.example.omok_server.listeners.ListenRunnable
 import org.example.omok_server.listeners.OmokListenRunnable
 import org.example.omok_server.player.Player
 import org.example.omok_server.room.Room
