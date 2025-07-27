@@ -1,8 +1,41 @@
 package omok.model
 
-class Game {
-    val board = Array(19) { IntArray(19) }
+import java.net.Socket
+
+class GameClient(
+    val host: String = "localhost",
+    val port: Int = 9090,
+) {
+    val socket = Socket(host, port)
+    val buffer = ByteArray(128)
+    val inputStream = socket.inputStream
+    val outputStream = socket.outputStream
+
+
+    init {
+        var bytesRead = inputStream.read(buffer)
+        var bytes = buffer.copyOf(bytesRead)
+        var data = String(bytes)
+        println("Received data: $data")
+
+        outputStream.write("<MESSAGE:ready>".toByteArray())
+
+        bytesRead = inputStream.read(buffer)
+        bytes = buffer.copyOf(bytesRead)
+        data = String(bytes)
+        println("Received data: $data")
+
+
+        bytesRead = inputStream.read(buffer)
+        bytes = buffer.copyOf(bytesRead)
+        data = String(bytes)
+        println("Received data: $data")
+    }
+
+
     var currentPlayer = 1
+
+    val board = Array(19) { IntArray(19) }
     var onGameEnd: ((Int) -> Unit)? = null
 
     fun placeStone(x: Int, y: Int): Boolean {

@@ -1,10 +1,7 @@
 package org.example.client
 
 import org.example.packet.MultiPropertyPacket
-import org.example.packet.SimplePacket
-import org.example.packet.deserialize
 import org.example.packet.deserializeMultiPropertyPacket
-import org.example.packet.serialize
 import org.example.packet.serializeMultiPropertyPacket
 import java.io.InputStream
 import java.io.OutputStream

@@ -6,17 +6,17 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
-import omok.model.Game
+import omok.model.GameClient
 import omok.view.BoardView
 
 class Main : Application() {
     override fun start(primaryStage: Stage) {
-        val game = Game()
-        val boardView = BoardView(game)
+        val client = GameClient()
+        val boardView = BoardView(client)
 
         val newGameButton = Button("New Game")
         newGameButton.setOnAction {
-            game.reset()
+            client.reset()
             boardView.draw()
         }
 
@@ -30,7 +30,7 @@ class Main : Application() {
         primaryStage.scene = scene
         primaryStage.show()
 
-        game.onGameEnd = {
+        client.onGameEnd = {
             val alert = Alert(Alert.AlertType.INFORMATION)
             alert.title = "Game Over"
             alert.headerText = null

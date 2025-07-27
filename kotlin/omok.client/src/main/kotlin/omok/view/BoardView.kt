@@ -4,9 +4,9 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
-import omok.model.Game
+import omok.model.GameClient
 
-class BoardView(private val game: Game) : Pane() {
+class BoardView(private val client: GameClient) : Pane() {
     private val canvas = Canvas(600.0, 600.0)
     private val gc = canvas.graphicsContext2D
 
@@ -17,7 +17,7 @@ class BoardView(private val game: Game) : Pane() {
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED) {
             val x = (it.x / (canvas.width / 19)).toInt()
             val y = (it.y / (canvas.height / 19)).toInt()
-            if (game.placeStone(x, y)) {
+            if (client.placeStone(x, y)) {
                 draw()
             }
         }
@@ -36,8 +36,8 @@ class BoardView(private val game: Game) : Pane() {
         // Draw stones
         for (y in 0..18) {
             for (x in 0..18) {
-                if (game.board[y][x] != 0) {
-                    gc.fill = if (game.board[y][x] == 1) Color.BLACK else Color.WHITE
+                if (client.board[y][x] != 0) {
+                    gc.fill = if (client.board[y][x] == 1) Color.BLACK else Color.WHITE
                     gc.fillOval(x * (canvas.width / 19) + 5, y * (canvas.height / 19) + 5, 30.0, 30.0)
                 }
             }
