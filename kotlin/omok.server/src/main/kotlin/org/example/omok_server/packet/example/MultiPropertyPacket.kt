@@ -1,4 +1,4 @@
-package org.example.omok_server.packet
+package org.example.omok_server.packet.example
 
 val MAX_MESSAGE_LENGTH = 20 // Maximum length of the message in bytes
 val MAX_NUMBER_LENGTH = 4 // Maximum length of the number in bytes

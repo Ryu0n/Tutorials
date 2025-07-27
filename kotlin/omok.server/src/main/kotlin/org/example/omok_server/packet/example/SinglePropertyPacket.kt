@@ -1,4 +1,4 @@
-package org.example.omok_server.packet
+package org.example.omok_server.packet.example
 
 fun serializeSinglePropertyPacket(SinglePropertyPacket: SinglePropertyPacket): ByteArray {
     // val header = byteArrayOf(0xAA.toByte(), 0xBB.toByte())
