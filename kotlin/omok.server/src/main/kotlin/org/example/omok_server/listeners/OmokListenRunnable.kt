@@ -54,7 +54,10 @@ class OmokListenRunnable(
             if (!gameRooms.contains(gameRoom)) {
                 gameRooms.add(gameRoom)
             }
-            val color = gameRoom.players.size.toString()
+            var color = "black"
+            if (gameRoom.players.size == 2) {
+                color = "white"
+            }
             player.send(
                 SetColorPacket(
                     SetColorPacketData(
