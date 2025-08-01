@@ -5,6 +5,7 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
 import javafx.stage.Stage
 import omok.model.GameClient
 import omok.view.BoardView
@@ -14,15 +15,25 @@ class Main : Application() {
         val client = GameClient()
         val boardView = BoardView(client)
 
-        val newGameButton = Button("New Game")
-        newGameButton.setOnAction {
+        val attendGameButton = Button("Attend to Game Room")
+        attendGameButton.setOnAction {
             client.reset()
             boardView.draw()
+            client.attendGame()
+        }
+
+        val exitGameButton = Button("Exit from Game Room")
+        exitGameButton.setOnAction {
+            client.reset()
+            boardView.draw()
+            client.exitGame()
         }
 
         val root = BorderPane()
         root.center = boardView
-        root.bottom = newGameButton
+
+        val buttonBox = HBox(10.0, attendGameButton, exitGameButton)
+        root.bottom = buttonBox
 
         val scene = Scene(root)
 

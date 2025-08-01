@@ -1,5 +1,6 @@
 package omok.model
 
+import javafx.scene.control.Alert
 import java.net.Socket
 
 class GameClient(
@@ -13,30 +14,53 @@ class GameClient(
 
 
     init {
-        var bytesRead = inputStream.read(buffer)
-        var bytes = buffer.copyOf(bytesRead)
-        var data = String(bytes)
-        println("Received data: $data")
-
-        outputStream.write("<MESSAGE:ready>".toByteArray())
-
-        bytesRead = inputStream.read(buffer)
-        bytes = buffer.copyOf(bytesRead)
-        data = String(bytes)
-        println("Received data: $data")
-
-
-        bytesRead = inputStream.read(buffer)
-        bytes = buffer.copyOf(bytesRead)
-        data = String(bytes)
-        println("Received data: $data")
+        receivePacket() // Read initial handshake message (e.g. Notice from server)
     }
-
 
     var currentPlayer = 1
 
     val board = Array(19) { IntArray(19) }
     var onGameEnd: ((Int) -> Unit)? = null
+
+    fun receivePacket(): String {
+        val bytesRead = inputStream.read(buffer)
+        val bytes = buffer.copyOf(bytesRead)
+        return String(bytes)
+    }
+
+    fun sendPacket(data: String) {
+        outputStream.write(data.toByteArray())
+        outputStream.flush()
+    }
+
+    fun attendGame() {
+        val packet = "<ATTENDANCE:roomId>"
+        sendPacket(packet)
+        val noticePacket = receivePacket()
+        Alert(Alert.AlertType.INFORMATION).apply {
+            title = "Notice"
+            headerText = null
+            contentText = noticePacket
+        }.showAndWait()
+
+        val setColorPacket = receivePacket()
+        Alert(Alert.AlertType.INFORMATION).apply {
+            title = "Set Color"
+            headerText = null
+            contentText = setColorPacket
+        }.showAndWait()
+
+    }
+
+    fun exitGame() {
+        val packet = "<EXIT:roomId>"
+        sendPacket(packet)
+        Alert(Alert.AlertType.INFORMATION).apply {
+            title = "Notice"
+            headerText = null
+            contentText = receivePacket()
+        }.showAndWait()
+    }
 
     fun placeStone(x: Int, y: Int): Boolean {
         if (board[y][x] == 0) {
