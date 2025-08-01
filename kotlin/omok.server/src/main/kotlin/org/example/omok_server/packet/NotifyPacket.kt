@@ -8,7 +8,7 @@ class NotifyPacket(
     packetData
 ) {
     override fun toString(): String {
-        return "${startDelimeter}${PacketType.NOTIFY.name}${delimeter}${packetData.notice}${endDelimeter}"
+        return "${startDelimeter}${PacketType.NOTIFY.name}${delimeter}${packetData.status}${delimeter}${packetData.notice}${endDelimeter}"
     }
 
     override fun serialize(): ByteArray {

@@ -14,7 +14,10 @@ class GameRoom : Room {
             broadcast(
                 NotifyPacket(
                     NotifyPacketData(
-                        listOf("${player.id} has joined the game room.")
+                        listOf(
+                            "Success",
+                            "${player.id} has joined the game room."
+                        )
                     )
                 )
             )
@@ -22,7 +25,10 @@ class GameRoom : Room {
             broadcast(
                 NotifyPacket(
                     NotifyPacketData(
-                        listOf("Game room is full. ${player.id} cannot join.")
+                        listOf(
+                            "Failed",
+                            "Game room is full. ${player.id} cannot join."
+                        )
                     )
                 )
             )
@@ -34,7 +40,10 @@ class GameRoom : Room {
         broadcast(
             NotifyPacket(
                 NotifyPacketData(
-                    listOf("${player.id} has left the waiting room.")
+                    listOf(
+                        "Success",
+                        "${player.id} has left the game room."
+                    )
                 )
             )
         )

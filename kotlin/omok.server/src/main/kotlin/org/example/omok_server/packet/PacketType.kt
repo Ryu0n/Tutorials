@@ -6,5 +6,6 @@ enum class PacketType {
     ATTENDANCE,
     EXIT,
     COORDINATE,
+    SET_PLAYER_ID,
     SET_COLOR,
 }

@@ -2,6 +2,7 @@ package org.example.omok_server.listeners
 
 import org.example.omok_server.packet.AttendancePacket
 import org.example.omok_server.packet.ExitPacket
+import org.example.omok_server.packet.NotifyPacket
 import org.example.omok_server.packet.Packet
 import org.example.omok_server.packet.SetColorPacket
 import org.example.omok_server.packet.SetPlayerIdPacket
@@ -40,12 +41,36 @@ class OmokListenRunnable(
                 gameRooms.remove(gameRoom)
             }
             waitingRoom.addPlayer(player)
+        } else {
+            player.send(
+                NotifyPacket(
+                    NotifyPacketData(
+                        listOf(
+                            "Failed",
+                            "${player.id} is not in a game room."
+                        )
+                    )
+                )
+            )
         }
     }
 
     fun addPlayerToGameRoom(packet: AttendancePacket) {
         val roomId = packet.packetData.roomId
         if (roomId.isNotEmpty()) {
+            if (gameRooms.any { it.players.any { p -> p.id == player.id } }) {
+                player.send(
+                    NotifyPacket(
+                        NotifyPacketData(
+                            listOf(
+                                "Failed",
+                                "${player.id} is already in a game room."
+                            )
+                        )
+                    )
+                )
+                return
+            }
             if (waitingRoom.players.contains(player)) {
                 waitingRoom.removePlayer(player)
             }
