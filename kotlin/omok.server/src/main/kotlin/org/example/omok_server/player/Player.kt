@@ -16,7 +16,7 @@ class Player (
     val id: String,
     val socket: Socket,
 ) {
-    val buffer = ByteArray(32)
+    val buffer = ByteArray(128)
     val inputStream = socket.inputStream
     val outputStream = socket.outputStream
 
