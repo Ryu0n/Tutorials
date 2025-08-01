@@ -1,1 +1,1 @@
-rootProject.name = "omok_server"
+rootProject.name = "omok.server"
