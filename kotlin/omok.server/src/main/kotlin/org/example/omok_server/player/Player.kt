@@ -2,12 +2,14 @@ package org.example.omok_server.player
 
 import org.example.omok_server.packet.AttendancePacket
 import org.example.omok_server.packet.CoordinatePacket
+import org.example.omok_server.packet.ExitPacket
 import org.example.omok_server.packet.MessagePacket
 import org.example.omok_server.packet.data.MessagePacketData
 import org.example.omok_server.packet.Packet
 import org.example.omok_server.packet.PacketType
 import org.example.omok_server.packet.data.AttendancePacketData
 import org.example.omok_server.packet.data.CoordinatePacketData
+import org.example.omok_server.packet.data.ExitPacketData
 import java.net.Socket
 
 class Player (
@@ -40,6 +42,12 @@ class Player (
                     payload,
                 )
             )
+            // <EXIT:roomId>
+            PacketType.EXIT.name -> ExitPacket(
+                ExitPacketData(
+                    payload,
+                )
+            )
             // <COORDINATE:x:y>
             PacketType.COORDINATE.name -> CoordinatePacket(
                 CoordinatePacketData(
@@ -59,15 +67,29 @@ class Player (
 
         val receivedBytes = buffer.copyOf(bytesRead)
         val packet = deserialize(receivedBytes)
+        println("Received packet from player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
         return packet
     }
 
     fun send(packet: Packet) {
         try {
-            outputStream.write(packet.serialize())
+            val bytes = packet.serialize()
+            outputStream.write(bytes)
+            println("Sent packet to player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
             outputStream.flush()
         } catch (e: Exception) {
             println("Error sending message to player $id: ${e.message}")
+        }
+    }
+
+    fun close() {
+        try {
+            if (!socket.isClosed) {
+                socket.close()
+            }
+            println("Closed connection for player $id")
+        } catch (e: Exception) {
+            println("Error closing connection for player $id: ${e.message}")
         }
     }
 }
