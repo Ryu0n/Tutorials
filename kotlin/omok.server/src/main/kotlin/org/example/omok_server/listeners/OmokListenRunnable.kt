@@ -4,7 +4,10 @@ import org.example.omok_server.packet.AttendancePacket
 import org.example.omok_server.packet.ExitPacket
 import org.example.omok_server.packet.Packet
 import org.example.omok_server.packet.SetColorPacket
+import org.example.omok_server.packet.SetPlayerIdPacket
+import org.example.omok_server.packet.data.NotifyPacketData
 import org.example.omok_server.packet.data.SetColorPacketData
+import org.example.omok_server.packet.data.SetPlayerIdPacketData
 import org.example.omok_server.player.Player
 import org.example.omok_server.room.GameRoom
 import org.example.omok_server.room.Room
@@ -63,6 +66,13 @@ class OmokListenRunnable(
     }
 
     override fun run() {
+        player.send(
+            SetPlayerIdPacket(
+                SetPlayerIdPacketData(
+                    listOf(player.id)
+                )
+            )
+        )
         try {
             while (true) {
                 val packet = player.receive()
