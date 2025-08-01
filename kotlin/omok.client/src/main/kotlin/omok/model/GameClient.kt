@@ -1,26 +1,37 @@
 package omok.model
 
 import javafx.scene.control.Alert
+import javafx.scene.control.TextArea
 import java.net.Socket
 
 class GameClient(
-    val host: String = "localhost",
-    val port: Int = 9090,
+    private val chatArea: TextArea,
+    private val host: String = "localhost",
+    private val port: Int = 9090,
 ) {
     val socket = Socket(host, port)
     val buffer = ByteArray(128)
     val inputStream = socket.inputStream
     val outputStream = socket.outputStream
 
+    var playerId: String
+    lateinit var playerColor: String
+
 
     init {
-        receivePacket() // Read initial handshake message (e.g. Notice from server)
+        val joinMessage = receivePacket() // Read initial handshake message (e.g. Notice from server)
+        val playerIdPacket = receivePacket()
+        playerId = getPayloadFromPacket(playerIdPacket)[0]
     }
 
     var currentPlayer = 1
 
     val board = Array(19) { IntArray(19) }
     var onGameEnd: ((Int) -> Unit)? = null
+
+    fun getPayloadFromPacket(packet: String): List<String> {
+        return packet.removeSurrounding("<", ">").split(":").drop(1)
+    }
 
     fun receivePacket(): String {
         val bytesRead = inputStream.read(buffer)
@@ -37,29 +48,42 @@ class GameClient(
         val packet = "<ATTENDANCE:roomId>"
         sendPacket(packet)
         val noticePacket = receivePacket()
-        Alert(Alert.AlertType.INFORMATION).apply {
-            title = "Notice"
-            headerText = null
-            contentText = noticePacket
-        }.showAndWait()
+        val noticePayload = getPayloadFromPacket(noticePacket)
+        if (noticePayload[0] == "Failed") {
+            val alert = Alert(Alert.AlertType.ERROR)
+            alert.title = "Error"
+            alert.headerText = "Failed to join game room"
+            alert.contentText = noticePayload[1]
+            alert.showAndWait()
+            return
+        }
+        chatArea.appendText(noticePayload[1] + "\n")
 
         val setColorPacket = receivePacket()
-        Alert(Alert.AlertType.INFORMATION).apply {
-            title = "Set Color"
-            headerText = null
-            contentText = setColorPacket
-        }.showAndWait()
-
+        val setColorPayload = getPayloadFromPacket(setColorPacket)
+        playerColor = setColorPayload[0]
+        chatArea.appendText("You are playing as $playerColor.\n")
     }
 
     fun exitGame() {
         val packet = "<EXIT:roomId>"
         sendPacket(packet)
-        Alert(Alert.AlertType.INFORMATION).apply {
-            title = "Notice"
-            headerText = null
-            contentText = receivePacket()
-        }.showAndWait()
+        val noticePacket = receivePacket()
+        val noticePayload = getPayloadFromPacket(noticePacket)
+        if (noticePayload[0] == "Failed") {
+            val alert = Alert(Alert.AlertType.ERROR)
+            alert.title = "Error"
+            alert.headerText = "Failed to exit game room"
+            alert.contentText = noticePayload[1]
+            alert.showAndWait()
+            return
+        }
+        chatArea.appendText(noticePayload[1] + "\n")
+    }
+
+    fun sendMessage(message: String) {
+        val packet = "<MESSAGE:${playerId}; ${message}>"
+        sendPacket(packet)
     }
 
     fun placeStone(x: Int, y: Int): Boolean {

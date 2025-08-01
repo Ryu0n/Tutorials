@@ -1,12 +1,16 @@
 package omok.view
 
 import javafx.scene.canvas.Canvas
+import javafx.scene.control.Alert
+import javafx.scene.control.TextArea
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import omok.model.GameClient
 
-class BoardView(private val client: GameClient) : Pane() {
+class BoardView(
+    private val client: GameClient,
+) : Pane() {
     private val canvas = Canvas(600.0, 600.0)
     private val gc = canvas.graphicsContext2D
 
@@ -15,6 +19,17 @@ class BoardView(private val client: GameClient) : Pane() {
         draw()
 
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED) {
+            val isMyTurn = (client.playerColor == "black" && client.currentPlayer == 1) ||
+                    (client.playerColor == "white" && client.currentPlayer == 2)
+            if (!isMyTurn) {
+                Alert(Alert.AlertType.ERROR).apply {
+                    title = "Error"
+                    headerText = "Not your turn"
+                    contentText = "It's not your turn to play."
+                    showAndWait()
+                    return@addEventHandler
+                }
+            }
             val x = (it.x / (canvas.width / 19)).toInt()
             val y = (it.y / (canvas.height / 19)).toInt()
             if (client.placeStone(x, y)) {

@@ -14,12 +14,15 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import omok.model.GameClient
 import omok.view.BoardView
-import kotlin.io.appendText
-import kotlin.text.clear
 
 class Main : Application() {
     override fun start(primaryStage: Stage) {
-        val client = GameClient()
+        val chatArea = TextArea()
+        chatArea.isEditable = false
+        chatArea.prefRowCount = 5
+        chatArea.prefWidth = 100.0 // 원하는 너비로 조정
+
+        val client = GameClient(chatArea)
         val boardView = BoardView(client)
 
         val attendGameButton = Button("Attend to Game Room")
@@ -42,11 +45,6 @@ class Main : Application() {
         val buttonBox = HBox(10.0, attendGameButton, exitGameButton)
         root.bottom = buttonBox
 
-        val chatArea = TextArea()
-        chatArea.isEditable = false
-        chatArea.prefRowCount = 5
-        chatArea.prefWidth = 100.0 // 원하는 너비로 조정
-
         val chatInput = TextField()
         chatInput.promptText = "Please enter your message"
 
@@ -54,17 +52,20 @@ class Main : Application() {
         sendButton.setOnAction {
             val message = chatInput.text
             if (message.isNotBlank()) {
-                chatArea.appendText("나: $message\n")
                 chatInput.clear()
+                client.sendMessage(message)
+                val messagePacket = client.receivePacket()
+                val messagePayload = client.getPayloadFromPacket(messagePacket)
+                chatArea.appendText("${messagePayload[0]}\n")
             }
         }
 
         val chatSendBox = HBox(5.0, chatInput, sendButton)
-        chatSendBox.alignment = Pos.BOTTOM_RIGHT
+        chatSendBox.alignment = Pos.BOTTOM_CENTER
 
         val chatBox = VBox(10.0, chatArea, chatSendBox)
         VBox.setVgrow(chatArea, Priority.ALWAYS) // chatArea가 남는 공간을 모두 차지
-        chatBox.prefWidth = 250.0 // chatBox 전체 너비 지정
+        chatBox.prefWidth = 500.0 // chatBox 전체 너비 지정
 
         root.right = chatBox
 
