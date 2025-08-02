@@ -54,6 +54,7 @@ class Main : Application() {
         }
 
         exitGameButton.setOnAction {
+            boardView.reset()
             client.exitGame()
         }
 
@@ -64,6 +65,14 @@ class Main : Application() {
         root.bottom = buttonBox
 
         chatInput.promptText = "Please enter your message"
+
+        chatInput.setOnAction {
+            val message = chatInput.text
+            if (message.isNotBlank()) {
+                chatInput.clear()
+                client.sendMessage(message)
+            }
+        }
 
         sendButton.setOnAction {
             val message = chatInput.text
