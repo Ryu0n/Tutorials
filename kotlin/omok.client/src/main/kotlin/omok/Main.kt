@@ -25,16 +25,34 @@ class Main : Application() {
         val client = GameClient(chatArea)
         val boardView = BoardView(client)
 
-        // 애플리케이션 시작 시 서버 리스닝 시작
-        client.startListening()
-
         val attendGameButton = Button("Attend to Game Room")
+        val exitGameButton = Button("Exit from Game Room")
+        val sendButton = Button("Send")
+        val chatInput = TextField()
+
+        // 초기에는 버튼 비활성화
+        attendGameButton.isDisable = true
+        exitGameButton.isDisable = true
+        sendButton.isDisable = true
+        chatInput.isDisable = true
+
+        // GameClient가 준비되면 UI 활성화
+        client.onReady = {
+            attendGameButton.isDisable = false
+            exitGameButton.isDisable = false
+            sendButton.isDisable = false
+            chatInput.isDisable = false
+            chatArea.appendText("Connected to server. You can now join a game.\n")
+        }
+
+        // 애플리케이션 시작 시 서버 리스닝 시작
+        client.initialize()
+
         attendGameButton.setOnAction {
             boardView.reset()
             client.attendGame()
         }
 
-        val exitGameButton = Button("Exit from Game Room")
         exitGameButton.setOnAction {
             client.exitGame()
         }
@@ -45,10 +63,8 @@ class Main : Application() {
         val buttonBox = HBox(10.0, attendGameButton, exitGameButton)
         root.bottom = buttonBox
 
-        val chatInput = TextField()
         chatInput.promptText = "Please enter your message"
 
-        val sendButton = Button("Send")
         sendButton.setOnAction {
             val message = chatInput.text
             if (message.isNotBlank()) {
@@ -57,7 +73,6 @@ class Main : Application() {
             }
         }
 
-        // GameClient로부터 받은 메시지 처리
         client.onMessageReceived = { message ->
             chatArea.appendText("$message\n")
         }

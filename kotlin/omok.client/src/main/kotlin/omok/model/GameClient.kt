@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.Socket
+import java.nio.charset.Charset
 
 class GameClient(
     private val chatArea: TextArea,
@@ -15,91 +16,123 @@ class GameClient(
     private val socket = Socket(host, port)
     private val inputStream = socket.inputStream
     private val outputStream = socket.outputStream
+    private val buffer = StringBuilder()
 
-    lateinit var playerId: String
+    var playerId: String? = null
     lateinit var playerColor: String
 
     var onStonePlaced: ((Int, Int, Int) -> Unit)? = null
     var onGameEnd: ((Int) -> Unit)? = null
     var onMessageReceived: ((String) -> Unit)? = null
+    var onReady: (() -> Unit)? = null
 
-    init {
-        // 초기 핸드셰이크 메시지는 동기적으로 처리
-        val joinMessage = receivePacket() // 서버로부터의 공지 등
-        val playerIdPacket = receivePacket()
-        playerId = getPayloadFromPacket(playerIdPacket)[0]
+    fun initialize() {
+        CoroutineScope(Dispatchers.IO).launch {
+            startListening()
+        }
     }
 
-    fun startListening() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
+    private fun startListening() {
+        try {
+            val tempBuffer = ByteArray(1024)
+            while (socket.isConnected) {
+                val bytesRead = inputStream.read(tempBuffer)
+                if (bytesRead == -1) break
+
+                buffer.append(String(tempBuffer, 0, bytesRead, Charset.defaultCharset()))
+
                 while (true) {
-                    val packet = receivePacket()
-                    if (packet.isEmpty()) continue
-
-                    val payload = getPayloadFromPacket(packet)
-                    val command = packet.substringBefore(":").removePrefix("<")
-
-                    Platform.runLater {
-                        when (command) {
-                            "SET_COLOR" -> {
-                                playerColor = payload[0]
-                                chatArea.appendText("You are playing as $playerColor.\n")
-                            }
-                            "COORDINATE" -> {
-                                val x = payload[0].toInt()
-                                val y = payload[1].toInt()
-                                val player = payload[2].toInt()
-                                onStonePlaced?.invoke(x, y, player)
-                            }
-                            "MESSAGE" -> {
-                                onMessageReceived?.invoke(payload[0])
-                            }
-                            "GAME_END" -> {
-                                onGameEnd?.invoke(payload[0].toInt())
-                            }
-                            "NOTIFY" -> {
-                                chatArea.appendText("${payload[1]}\n")
-                            }
-                        }
-                    }
+                    val packet = extractNextPacketFromBuffer() ?: break
+                    processPacket(packet)
                 }
-            } catch (e: Exception) {
-                Platform.runLater {
-                    chatArea.appendText("Disconnected from server.\n")
+            }
+        } catch (e: Exception) {
+            Platform.runLater {
+                chatArea.appendText("Connection error: ${e.message}\n")
+            }
+        } finally {
+            Platform.runLater {
+                chatArea.appendText("Disconnected from server.\n")
+            }
+            socket.close()
+        }
+    }
+
+    private fun extractNextPacketFromBuffer(): String? {
+        val startIndex = buffer.indexOf("<")
+        val endIndex = buffer.indexOf(">")
+        return if (startIndex != -1 && endIndex > startIndex) {
+            val packet = buffer.substring(startIndex, endIndex + 1)
+            buffer.delete(0, endIndex + 1)
+            packet
+        } else {
+            if (endIndex < startIndex && endIndex != -1) {
+                buffer.delete(0, startIndex)
+            }
+            null
+        }
+    }
+
+    private fun processPacket(packet: String) {
+        val command = packet.substringAfter("<").substringBefore(":")
+        val payload = packet.removeSurrounding("<", ">").split(":").drop(1)
+
+        if (playerId == null && command != "NOTIFY" && payload.isNotEmpty()) {
+            playerId = payload[0]
+            Platform.runLater { onReady?.invoke() }
+        }
+
+        Platform.runLater {
+            when (command) {
+                "SET_COLOR" -> {
+                    playerColor = payload[0]
+                    chatArea.appendText("You are playing as $playerColor.\n")
+                }
+                "COORDINATE" -> {
+                    val x = payload[0].toInt()
+                    val y = payload[1].toInt()
+                    val player = payload[2].toInt()
+                    onStonePlaced?.invoke(x, y, player)
+                }
+                "MESSAGE" -> {
+                    onMessageReceived?.invoke(payload[0])
+                }
+                "GAME_END" -> {
+                    onGameEnd?.invoke(payload[0].toInt())
+                }
+                "NOTIFY" -> {
+                    chatArea.appendText("${payload[1]}\n")
                 }
             }
         }
     }
 
-    private fun getPayloadFromPacket(packet: String): List<String> {
-        return packet.removeSurrounding("<", ">").split(":").drop(1)
-    }
-
-    private fun receivePacket(): String {
-        val buffer = ByteArray(256)
-        val bytesRead = inputStream.read(buffer)
-        return if (bytesRead > 0) String(buffer, 0, bytesRead) else ""
-    }
-
     fun sendPacket(data: String) {
-        outputStream.write(data.toByteArray())
-        outputStream.flush()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                outputStream.write(data.toByteArray(Charset.defaultCharset()))
+                outputStream.flush()
+            } catch (e: Exception) {
+                Platform.runLater {
+                    chatArea.appendText("Failed to send packet: ${e.message}\n")
+                }
+            }
+        }
     }
 
     fun attendGame() {
-        val packet = "<ATTENDANCE:roomId>"
-        sendPacket(packet)
+        sendPacket("<ATTENDANCE:roomId>")
     }
 
     fun exitGame() {
-        val packet = "<EXIT:roomId>"
-        sendPacket(packet)
+        sendPacket("<EXIT:roomId>")
     }
 
     fun sendMessage(message: String) {
-        val packet = "<MESSAGE:[${playerId}] ${message}>"
-        sendPacket(packet)
+        playerId?.let { id ->
+            val packet = "<MESSAGE:[${id}] ${message}>"
+            sendPacket(packet)
+        }
     }
 
     fun placeStone(x: Int, y: Int) {
@@ -107,7 +140,6 @@ class GameClient(
         if (playerColor == "white") {
             pc = "2"
         }
-        val packet = "<COORDINATE:$x:$y:$pc>"
-        sendPacket(packet)
+        sendPacket("<COORDINATE:$x:$y:$pc>")
     }
 }
