@@ -47,7 +47,7 @@ class OmokListenRunnable(
                     NotifyPacketData(
                         listOf(
                             "Failed",
-                            "${player.id} is not in a game room."
+                            "[SYSTEM] ${player.id} is not in a game room."
                         )
                     )
                 )
@@ -64,7 +64,7 @@ class OmokListenRunnable(
                         NotifyPacketData(
                             listOf(
                                 "Failed",
-                                "${player.id} is already in a game room."
+                                "[SYSTEM] ${player.id} is already in a game room."
                             )
                         )
                     )

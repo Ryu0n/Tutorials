@@ -16,7 +16,7 @@ class WaitingRoom : Room {
                 NotifyPacketData(
                     listOf(
                         "Success",
-                        "${player.id} has joined the waiting room."
+                        "[SYSTEM] ${player.id} has joined the waiting room."
                     )
                 )
             )
@@ -30,7 +30,7 @@ class WaitingRoom : Room {
                 NotifyPacketData(
                     listOf(
                         "Success",
-                        "${player.id} has left the waiting room."
+                        "[SYSTEM] ${player.id} has left the waiting room."
                     )
                 )
             )
