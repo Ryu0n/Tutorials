@@ -2,7 +2,6 @@ package omok.view
 
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.Alert
-import javafx.scene.control.TextArea
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
@@ -13,28 +12,26 @@ class BoardView(
 ) : Pane() {
     private val canvas = Canvas(600.0, 600.0)
     private val gc = canvas.graphicsContext2D
+    private val board = Array(19) { IntArray(19) }
+    private var currentPlayer = 1
 
     init {
         children.add(canvas)
         draw()
 
+        // GameClient로부터 받은 돌 놓기 정보를 처리
+        client.onStonePlaced = { x, y, player ->
+            board[y][x] = player
+            currentPlayer = if (player == 1) 2 else 1
+            draw()
+        }
+
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED) {
-            val isMyTurn = (client.playerColor == "black" && client.currentPlayer == 1) ||
-                    (client.playerColor == "white" && client.currentPlayer == 2)
-            if (!isMyTurn) {
-                Alert(Alert.AlertType.ERROR).apply {
-                    title = "Error"
-                    headerText = "Not your turn"
-                    contentText = "It's not your turn to play."
-                    showAndWait()
-                    return@addEventHandler
-                }
-            }
             val x = (it.x / (canvas.width / 19)).toInt()
             val y = (it.y / (canvas.height / 19)).toInt()
-            if (client.placeStone(x, y)) {
-                draw()
-            }
+
+            // 서버에 돌 놓기 요청
+            client.placeStone(x, y)
         }
     }
 
@@ -51,11 +48,21 @@ class BoardView(
         // Draw stones
         for (y in 0..18) {
             for (x in 0..18) {
-                if (client.board[y][x] != 0) {
-                    gc.fill = if (client.board[y][x] == 1) Color.BLACK else Color.WHITE
+                if (board[y][x] != 0) {
+                    gc.fill = if (board[y][x] == 1) Color.BLACK else Color.WHITE
                     gc.fillOval(x * (canvas.width / 19) + 5, y * (canvas.height / 19) + 5, 30.0, 30.0)
                 }
             }
         }
+    }
+
+    fun reset() {
+        for (i in board.indices) {
+            for (j in board[i].indices) {
+                board[i][j] = 0
+            }
+        }
+        currentPlayer = 1
+        draw()
     }
 }

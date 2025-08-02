@@ -20,22 +20,22 @@ class Main : Application() {
         val chatArea = TextArea()
         chatArea.isEditable = false
         chatArea.prefRowCount = 5
-        chatArea.prefWidth = 100.0 // 원하는 너비로 조정
+        chatArea.prefWidth = 100.0
 
         val client = GameClient(chatArea)
         val boardView = BoardView(client)
 
+        // 애플리케이션 시작 시 서버 리스닝 시작
+        client.startListening()
+
         val attendGameButton = Button("Attend to Game Room")
         attendGameButton.setOnAction {
-            client.reset()
-            boardView.draw()
+            boardView.reset()
             client.attendGame()
         }
 
         val exitGameButton = Button("Exit from Game Room")
         exitGameButton.setOnAction {
-            client.reset()
-            boardView.draw()
             client.exitGame()
         }
 
@@ -54,18 +54,20 @@ class Main : Application() {
             if (message.isNotBlank()) {
                 chatInput.clear()
                 client.sendMessage(message)
-                val messagePacket = client.receivePacket()
-                val messagePayload = client.getPayloadFromPacket(messagePacket)
-                chatArea.appendText("${messagePayload[0]}\n")
             }
+        }
+
+        // GameClient로부터 받은 메시지 처리
+        client.onMessageReceived = { message ->
+            chatArea.appendText("$message\n")
         }
 
         val chatSendBox = HBox(5.0, chatInput, sendButton)
         chatSendBox.alignment = Pos.BOTTOM_CENTER
 
         val chatBox = VBox(10.0, chatArea, chatSendBox)
-        VBox.setVgrow(chatArea, Priority.ALWAYS) // chatArea가 남는 공간을 모두 차지
-        chatBox.prefWidth = 500.0 // chatBox 전체 너비 지정
+        VBox.setVgrow(chatArea, Priority.ALWAYS)
+        chatBox.prefWidth = 500.0
 
         root.right = chatBox
 
@@ -75,12 +77,13 @@ class Main : Application() {
         primaryStage.scene = scene
         primaryStage.show()
 
-        client.onGameEnd = {
+        client.onGameEnd = { winner ->
             val alert = Alert(Alert.AlertType.INFORMATION)
             alert.title = "Game Over"
             alert.headerText = null
-            alert.contentText = "Player ${it} wins!"
+            alert.contentText = "Player $winner wins!"
             alert.showAndWait()
+            boardView.reset()
         }
     }
 }
