@@ -6,7 +6,7 @@ class CoordinatePacket(
     override val packetData: CoordinatePacketData
 ) : Packet(packetData) {
     override fun toString(): String {
-        return "${startDelimeter}${PacketType.COORDINATE.name}${delimeter}${packetData.x}${delimeter}${packetData.y}${endDelimeter}"
+        return "${startDelimeter}${PacketType.COORDINATE.name}${delimeter}${packetData.x}${delimeter}${packetData.y}${delimeter}${packetData.playerColor}${endDelimeter}"
     }
 
     override fun serialize(): ByteArray {

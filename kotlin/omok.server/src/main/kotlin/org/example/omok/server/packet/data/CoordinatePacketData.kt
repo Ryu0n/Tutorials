@@ -5,4 +5,5 @@ class CoordinatePacketData(
 ) : PacketData {
     val x = payload[0]
     val y = payload[1]
+    val playerColor = payload[2]
 }
