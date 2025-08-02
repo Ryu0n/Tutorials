@@ -1,11 +1,13 @@
 package org.example.omok.server.room
 
+import org.example.omok.server.packet.CoordinatePacket
 import org.example.omok.server.packet.NotifyPacket
 import org.example.omok.server.packet.Packet
 import org.example.omok.server.packet.data.NotifyPacketData
 import org.example.omok.server.player.Player
 
 class GameRoom : Room {
+    var playerTurn: Int = 1 // Placeholder for player turn logic, can be expanded later
     override val players: MutableList<Player> = mutableListOf()
 
     override fun addPlayer(player: Player) {
@@ -50,6 +52,13 @@ class GameRoom : Room {
     }
 
     override fun broadcast(packet: Packet) {
+        if (packet is CoordinatePacket) {
+            if (packet.packetData.playerColor.toInt() == playerTurn)  {
+                return
+            } else {
+                playerTurn = packet.packetData.playerColor.toInt()
+            }
+        }
         for (player in players) {
             player.send(packet)
         }

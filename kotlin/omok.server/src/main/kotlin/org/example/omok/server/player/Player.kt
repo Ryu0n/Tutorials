@@ -48,7 +48,7 @@ class Player (
                     payload,
                 )
             )
-            // <COORDINATE:x:y>
+            // <COORDINATE:x:y:1|2>
             PacketType.COORDINATE.name -> CoordinatePacket(
                 CoordinatePacketData(
                     payload,

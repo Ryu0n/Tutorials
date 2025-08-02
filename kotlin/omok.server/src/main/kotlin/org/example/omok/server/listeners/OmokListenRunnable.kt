@@ -128,7 +128,7 @@ class OmokListenRunnable(
                 }
             }
         } catch (e: Exception) {
-            println("Error reading message from player ${player.id}: ${e.message}")
+            println("Error reading message from player ${player.id}: ${e.message}\n${e.stackTraceToString()}")
         } finally {
             removePlayerFromApplication()
         }
