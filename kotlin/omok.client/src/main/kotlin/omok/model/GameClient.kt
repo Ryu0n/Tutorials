@@ -18,11 +18,12 @@ class GameClient(
     private val outputStream = socket.outputStream
     private val buffer = StringBuilder()
 
+    var isGameFinished = false
     var playerId: String? = null
     lateinit var playerColor: String
 
     var onStonePlaced: ((Int, Int, Int) -> Unit)? = null
-    var onGameEnd: ((Int) -> Unit)? = null
+    var onGameEnd: ((String) -> Unit)? = null
     var onMessageReceived: ((String) -> Unit)? = null
     var onReady: (() -> Unit)? = null
 
@@ -84,6 +85,10 @@ class GameClient(
 
         Platform.runLater {
             when (command) {
+                "SET_PLAYER_ID" -> {
+                    playerId = payload[0]
+                    chatArea.appendText("Your player ID is $playerId.\n")
+                }
                 "SET_COLOR" -> {
                     playerColor = payload[0]
                     chatArea.appendText("You are playing as $playerColor.\n")
@@ -97,11 +102,17 @@ class GameClient(
                 "MESSAGE" -> {
                     onMessageReceived?.invoke(payload[0])
                 }
-                "GAME_END" -> {
-                    onGameEnd?.invoke(payload[0].toInt())
-                }
                 "NOTIFY" -> {
                     chatArea.appendText("${payload[1]}\n")
+                }
+                "MATCH_RESULT" -> {
+                    val winnerId = payload[0]
+                    chatArea.appendText("Game over! Player $winnerId wins!\n")
+                    onGameEnd?.invoke(winnerId.toString())
+                    isGameFinished = true
+                }
+                else -> {
+                    chatArea.appendText("Unknown command: $command\n")
                 }
             }
         }
@@ -121,6 +132,7 @@ class GameClient(
     }
 
     fun attendGame() {
+        isGameFinished = false
         sendPacket("<ATTENDANCE:roomId>")
     }
 
@@ -135,11 +147,16 @@ class GameClient(
         }
     }
 
-    fun placeStone(x: Int, y: Int) {
+    fun placeStone(x: Int, y: Int): Boolean {
+        if (isGameFinished) {
+            chatArea.appendText("Game is already finished.\n")
+            return false
+        }
         var pc = "1"
         if (playerColor == "white") {
             pc = "2"
         }
         sendPacket("<COORDINATE:$x:$y:$pc>")
+        return true
     }
 }
