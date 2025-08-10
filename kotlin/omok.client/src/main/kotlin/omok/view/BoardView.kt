@@ -46,7 +46,8 @@ class BoardView(
     }
 
     fun draw() {
-        gc.clearRect(0.0, 0.0, canvas.width, canvas.height)
+        gc.fill = Color.BEIGE
+        gc.fillRect(0.0, 0.0, canvas.width, canvas.height)
 
         // Draw board
         gc.stroke = Color.BLACK
