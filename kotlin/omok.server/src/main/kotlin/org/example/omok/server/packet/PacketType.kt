@@ -8,4 +8,5 @@ enum class PacketType {
     COORDINATE,
     SET_PLAYER_ID,
     SET_COLOR,
+    MATCH_RESULT,
 }

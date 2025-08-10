@@ -3,6 +3,7 @@ package org.example.omok.server.player
 import org.example.omok.server.packet.AttendancePacket
 import org.example.omok.server.packet.CoordinatePacket
 import org.example.omok.server.packet.ExitPacket
+import org.example.omok.server.packet.MatchResultPacket
 import org.example.omok.server.packet.MessagePacket
 import org.example.omok.server.packet.data.MessagePacketData
 import org.example.omok.server.packet.Packet
@@ -10,6 +11,7 @@ import org.example.omok.server.packet.PacketType
 import org.example.omok.server.packet.data.AttendancePacketData
 import org.example.omok.server.packet.data.CoordinatePacketData
 import org.example.omok.server.packet.data.ExitPacketData
+import org.example.omok.server.packet.data.MatchResultPacketData
 import java.net.Socket
 
 class Player (
@@ -51,6 +53,12 @@ class Player (
             // <COORDINATE:x:y:1|2>
             PacketType.COORDINATE.name -> CoordinatePacket(
                 CoordinatePacketData(
+                    payload,
+                )
+            )
+            // <MATCH_RESULT:winPlayerId>
+            PacketType.MATCH_RESULT.name -> MatchResultPacket(
+                MatchResultPacketData(
                     payload,
                 )
             )

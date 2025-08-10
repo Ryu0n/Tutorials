@@ -9,7 +9,7 @@ class ExitPacket(
         return "${startDelimeter}${PacketType.EXIT.name}${delimeter}${packetData.roomId}${endDelimeter}"
     }
 
-    override  fun serialize(): ByteArray {
+    override fun serialize(): ByteArray {
         return toString().toByteArray()
     }
 }
