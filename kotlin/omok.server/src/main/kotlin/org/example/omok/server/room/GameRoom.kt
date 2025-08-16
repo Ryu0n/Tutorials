@@ -53,10 +53,11 @@ class GameRoom : Room {
 
     override fun broadcast(packet: Packet) {
         if (packet is CoordinatePacket) {
-            if (packet.packetData.playerColor.toInt() == playerTurn)  {
+            if (packet.packetData.playerColor.toInt() != playerTurn)  {
                 return
             } else {
-                playerTurn = packet.packetData.playerColor.toInt()
+                val playerColor = packet.packetData.playerColor.toInt()
+                playerTurn = 3 - playerColor // Toggle between 1 and 2
             }
         }
         for (player in players) {
