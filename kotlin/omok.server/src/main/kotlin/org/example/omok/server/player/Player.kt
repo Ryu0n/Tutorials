@@ -21,6 +21,7 @@ class Player (
     val buffer = ByteArray(256)
     val inputStream = socket.inputStream
     val outputStream = socket.outputStream
+    var playerColor: Int = 0 // Placeholder for player color, can be set later
 
     fun deserialize(bytes: ByteArray): Packet {
         val data = String(bytes)
@@ -32,6 +33,7 @@ class Player (
         val payload = packetAttrs.slice(1 until packetAttrs.size)
 
         return when(packetTypeString) {
+            // Travel to classes
             // <MESSAGE:message>
             PacketType.MESSAGE.name -> MessagePacket(
                 MessagePacketData(

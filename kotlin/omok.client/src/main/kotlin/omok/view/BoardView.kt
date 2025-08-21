@@ -37,9 +37,6 @@ class BoardView(
                     if (client.playerColor == "white") {
                         pc = 2
                     }
-                    if (checkFiveInARow(x, y, pc)) {
-                        client.sendPacket("<MATCH_RESULT:$id>")
-                    }
                 }
             }
         }
@@ -75,35 +72,5 @@ class BoardView(
         }
         currentPlayer = 1
         draw()
-    }
-
-    private fun checkFiveInARow(x: Int, y: Int, player: Int): Boolean {
-        val directions = listOf(
-            Pair(1, 0),  // 가로
-            Pair(0, 1),  // 세로
-            Pair(1, 1),  // 대각 ↘
-            Pair(1, -1)  // 대각 ↗
-        )
-        for ((dx, dy) in directions) {
-            var count = 1
-            // 한 방향
-            var nx = x + dx
-            var ny = y + dy
-            while (nx in 0..18 && ny in 0..18 && board[ny][nx] == player) {
-                count++
-                nx += dx
-                ny += dy
-            }
-            // 반대 방향
-            nx = x - dx
-            ny = y - dy
-            while (nx in 0..18 && ny in 0..18 && board[ny][nx] == player) {
-                count++
-                nx -= dx
-                ny -= dy
-            }
-            if (count >= 5) return true
-        }
-        return false
     }
 }

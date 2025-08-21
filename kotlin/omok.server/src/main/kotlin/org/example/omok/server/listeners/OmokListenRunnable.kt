@@ -79,9 +79,12 @@ class OmokListenRunnable(
             if (!gameRooms.contains(gameRoom)) {
                 gameRooms.add(gameRoom)
             }
+
             var color = "black"
+            player.playerColor = 1 // Default color
             if (gameRoom.players.size == 2) {
                 color = "white"
+                player.playerColor = 2
             }
             player.send(
                 SetColorPacket(
@@ -117,6 +120,7 @@ class OmokListenRunnable(
                     continue
                 }
 
+                // TODO: Consider about dispatcher
                 // Broadcast the packet to all players in the game rooms and waiting room (e.g. Chats, moves)
                 gameRooms.forEach { room ->
                     if (room.players.contains(player)) {

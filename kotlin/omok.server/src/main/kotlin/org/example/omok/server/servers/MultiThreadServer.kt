@@ -21,6 +21,7 @@ class MultiThreadServer {
     val waitingRoom = WaitingRoom()
     val gameRooms = mutableListOf<Room>()
 
+    // TODO: I/O -> Multi-Threading / Logic (handle with business logic) -> Single-Threading
     fun start() {
         while (true) {
             val randomUUIDString = UUID.randomUUID().toString()
