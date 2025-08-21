@@ -1,9 +1,9 @@
 package org.example.omok.server.servers
 
 import org.example.omok.server.listeners.OmokListenRunnable
-import org.example.omok.server.player.Player
-import org.example.omok.server.room.Room
-import org.example.omok.server.room.WaitingRoom
+import org.example.omok.server.players.Player
+import org.example.omok.server.rooms.Room
+import org.example.omok.server.rooms.WaitingRoom
 import org.springframework.stereotype.Component
 import java.net.InetAddress
 import java.net.ServerSocket

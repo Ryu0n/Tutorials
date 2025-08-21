@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.CoordinatePacketData
+import org.example.omok.server.packets.data.CoordinatePacketData
 
 class CoordinatePacket(
     override val packetData: CoordinatePacketData

@@ -1,17 +1,17 @@
-package org.example.omok.server.player
+package org.example.omok.server.players
 
-import org.example.omok.server.packet.AttendancePacket
-import org.example.omok.server.packet.CoordinatePacket
-import org.example.omok.server.packet.ExitPacket
-import org.example.omok.server.packet.MatchResultPacket
-import org.example.omok.server.packet.MessagePacket
-import org.example.omok.server.packet.data.MessagePacketData
-import org.example.omok.server.packet.Packet
-import org.example.omok.server.packet.PacketType
-import org.example.omok.server.packet.data.AttendancePacketData
-import org.example.omok.server.packet.data.CoordinatePacketData
-import org.example.omok.server.packet.data.ExitPacketData
-import org.example.omok.server.packet.data.MatchResultPacketData
+import org.example.omok.server.packets.AttendancePacket
+import org.example.omok.server.packets.CoordinatePacket
+import org.example.omok.server.packets.ExitPacket
+import org.example.omok.server.packets.MatchResultPacket
+import org.example.omok.server.packets.MessagePacket
+import org.example.omok.server.packets.data.MessagePacketData
+import org.example.omok.server.packets.Packet
+import org.example.omok.server.packets.PacketType
+import org.example.omok.server.packets.data.AttendancePacketData
+import org.example.omok.server.packets.data.CoordinatePacketData
+import org.example.omok.server.packets.data.ExitPacketData
+import org.example.omok.server.packets.data.MatchResultPacketData
 import java.net.Socket
 
 class Player (

@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.MessagePacketData
+import org.example.omok.server.packets.data.MessagePacketData
 
 class MessagePacket(
     override val packetData: MessagePacketData

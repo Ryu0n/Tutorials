@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.SetPlayerIdPacketData
+import org.example.omok.server.packets.data.SetPlayerIdPacketData
 
 class SetPlayerIdPacket(
     override val packetData: SetPlayerIdPacketData,

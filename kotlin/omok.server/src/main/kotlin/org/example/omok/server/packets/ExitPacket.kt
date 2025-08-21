@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.ExitPacketData
+import org.example.omok.server.packets.data.ExitPacketData
 
 class ExitPacket(
     override val packetData: ExitPacketData,

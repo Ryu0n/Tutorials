@@ -1,17 +1,17 @@
 package org.example.omok.server.listeners
 
-import org.example.omok.server.packet.AttendancePacket
-import org.example.omok.server.packet.ExitPacket
-import org.example.omok.server.packet.NotifyPacket
-import org.example.omok.server.packet.Packet
-import org.example.omok.server.packet.SetColorPacket
-import org.example.omok.server.packet.SetPlayerIdPacket
-import org.example.omok.server.packet.data.NotifyPacketData
-import org.example.omok.server.packet.data.SetColorPacketData
-import org.example.omok.server.packet.data.SetPlayerIdPacketData
-import org.example.omok.server.player.Player
-import org.example.omok.server.room.GameRoom
-import org.example.omok.server.room.Room
+import org.example.omok.server.packets.AttendancePacket
+import org.example.omok.server.packets.ExitPacket
+import org.example.omok.server.packets.NotifyPacket
+import org.example.omok.server.packets.Packet
+import org.example.omok.server.packets.SetColorPacket
+import org.example.omok.server.packets.SetPlayerIdPacket
+import org.example.omok.server.packets.data.NotifyPacketData
+import org.example.omok.server.packets.data.SetColorPacketData
+import org.example.omok.server.packets.data.SetPlayerIdPacketData
+import org.example.omok.server.players.Player
+import org.example.omok.server.rooms.GameRoom
+import org.example.omok.server.rooms.Room
 
 
 class OmokListenRunnable(

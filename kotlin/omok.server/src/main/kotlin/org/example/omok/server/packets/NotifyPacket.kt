@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.NotifyPacketData
+import org.example.omok.server.packets.data.NotifyPacketData
 
 class NotifyPacket(
     override val packetData: NotifyPacketData,

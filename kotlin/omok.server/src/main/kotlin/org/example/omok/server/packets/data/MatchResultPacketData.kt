@@ -1,4 +1,4 @@
-package org.example.omok.server.packet.data
+package org.example.omok.server.packets.data
 
 class MatchResultPacketData(
     override val payload: List<String>,

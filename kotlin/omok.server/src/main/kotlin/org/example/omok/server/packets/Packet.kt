@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.PacketData
+import org.example.omok.server.packets.data.PacketData
 
 abstract class Packet (
     open val packetData: PacketData

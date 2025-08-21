@@ -1,7 +1,7 @@
 package org.example.omok.server.listeners
 
-import org.example.omok.server.packet.example.deserializeMultiPropertyPacket
-import org.example.omok.server.packet.example.serializeMultiPropertyPacket
+import org.example.omok.server.packets.example.deserializeMultiPropertyPacket
+import org.example.omok.server.packets.example.serializeMultiPropertyPacket
 import java.net.Socket
 
 

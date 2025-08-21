@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.MatchResultPacketData
+import org.example.omok.server.packets.data.MatchResultPacketData
 
 class MatchResultPacket(
     override val packetData: MatchResultPacketData,

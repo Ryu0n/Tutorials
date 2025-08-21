@@ -1,10 +1,10 @@
-package org.example.omok.server.room
+package org.example.omok.server.rooms
 
 
-import org.example.omok.server.packet.NotifyPacket
-import org.example.omok.server.packet.Packet
-import org.example.omok.server.packet.data.NotifyPacketData
-import org.example.omok.server.player.Player
+import org.example.omok.server.packets.NotifyPacket
+import org.example.omok.server.packets.Packet
+import org.example.omok.server.packets.data.NotifyPacketData
+import org.example.omok.server.players.Player
 
 class WaitingRoom : Room {
     override val players: MutableList<Player> = mutableListOf()

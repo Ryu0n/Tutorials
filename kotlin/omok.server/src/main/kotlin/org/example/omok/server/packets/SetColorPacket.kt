@@ -1,6 +1,6 @@
-package org.example.omok.server.packet
+package org.example.omok.server.packets
 
-import org.example.omok.server.packet.data.SetColorPacketData
+import org.example.omok.server.packets.data.SetColorPacketData
 
 class SetColorPacket(
     override val packetData: SetColorPacketData,
