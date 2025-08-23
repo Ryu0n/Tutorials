@@ -42,7 +42,7 @@ class Main : Application() {
             exitGameButton.isDisable = false
             sendButton.isDisable = false
             chatInput.isDisable = false
-            chatArea.appendText("Connected to server. You can now join a game.\n")
+            chatArea.appendText("[CLIENT] Connected to server. You can now join a game.\n")
         }
 
         // 애플리케이션 시작 시 서버 리스닝 시작

@@ -18,7 +18,6 @@ class GameClient(
     private val outputStream = socket.outputStream
     private val buffer = StringBuilder()
 
-    var isGameFinished = false
     var playerId: String? = null
     lateinit var playerColor: String
 
@@ -49,11 +48,11 @@ class GameClient(
             }
         } catch (e: Exception) {
             Platform.runLater {
-                chatArea.appendText("Connection error: ${e.message}\n")
+                chatArea.appendText("[CLIENT] Connection error: ${e.message}\n")
             }
         } finally {
             Platform.runLater {
-                chatArea.appendText("Disconnected from server.\n")
+                chatArea.appendText("[CLIENT] Disconnected from server.\n")
             }
             socket.close()
         }
@@ -87,11 +86,11 @@ class GameClient(
             when (command) {
                 "SET_PLAYER_ID" -> {
                     playerId = payload[0]
-                    chatArea.appendText("Your player ID is $playerId.\n")
+                    chatArea.appendText("[SYSTEM] Your player ID is $playerId.\n")
                 }
                 "SET_COLOR" -> {
                     playerColor = payload[0]
-                    chatArea.appendText("You are playing as $playerColor.\n")
+                    chatArea.appendText("[SYSTEM] You are playing as $playerColor.\n")
                 }
                 "COORDINATE" -> {
                     val x = payload[0].toInt()
@@ -107,9 +106,8 @@ class GameClient(
                 }
                 "MATCH_RESULT" -> {
                     val winnerId = payload[0]
-                    chatArea.appendText("Game over! Player $winnerId wins!\n")
+                    chatArea.appendText("[SYSTEM] Game over! Player $winnerId wins!\n")
                     onGameEnd?.invoke(winnerId.toString())
-                    isGameFinished = true
                 }
                 else -> {
                     chatArea.appendText("Unknown command: $command\n")
@@ -125,14 +123,13 @@ class GameClient(
                 outputStream.flush()
             } catch (e: Exception) {
                 Platform.runLater {
-                    chatArea.appendText("Failed to send packet: ${e.message}\n")
+                    chatArea.appendText("[CLIENT] Failed to send packet: ${e.message}\n")
                 }
             }
         }
     }
 
     fun attendGame() {
-        isGameFinished = false
         sendPacket("<ATTENDANCE:roomId>")
     }
 
@@ -148,10 +145,6 @@ class GameClient(
     }
 
     fun placeStone(x: Int, y: Int): Boolean {
-        if (isGameFinished) {
-            chatArea.appendText("Game is already finished.\n")
-            return false
-        }
         var pc = "1"
         if (playerColor == "white") {
             pc = "2"
