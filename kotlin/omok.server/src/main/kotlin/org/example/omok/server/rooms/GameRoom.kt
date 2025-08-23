@@ -90,6 +90,21 @@ class GameRoom : Room {
 
     override fun removePlayer(player: Player) {
         players.remove(player)
+        if (status == GameRoomStatusType.IN_PROGRESS.name) {
+            status = GameRoomStatusType.FINISHED.name
+            val remainingPlayer = players.firstOrNull()
+            if (remainingPlayer != null) {
+                broadcast(
+                    MatchResultPacket(
+                        MatchResultPacketData(
+                            payload = listOf(
+                                remainingPlayer.id,
+                            )
+                        )
+                    )
+                )
+            }
+        }
         if (players.size < 2) {
             status = GameRoomStatusType.WAITING.name
         }
