@@ -151,6 +151,18 @@ class GameRoom : Room {
 
     override fun broadcast(packet: Packet) {
         if (packet is CoordinatePacket) {
+            if (status != GameRoomStatusType.IN_PROGRESS.name) {
+                return sendBroadcast(
+                    NotifyPacket(
+                        NotifyPacketData(
+                            listOf(
+                                "Failed",
+                                "[SYSTEM] Game is not in progress. Cannot place stone."
+                            )
+                        )
+                    )
+                )
+            }
             if (packet.packetData.playerColor.toInt() != playerTurn)  {
                 return
             } else {
