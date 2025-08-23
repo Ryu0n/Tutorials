@@ -1,24 +1,27 @@
 package org.example.omok.server.rooms
 
+import org.example.omok.server.enums.GameRoomStatusType
 import org.example.omok.server.packets.CoordinatePacket
 import org.example.omok.server.packets.MatchResultPacket
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.Packet
+import org.example.omok.server.packets.SetColorPacket
 import org.example.omok.server.packets.data.MatchResultPacketData
 import org.example.omok.server.packets.data.NotifyPacketData
+import org.example.omok.server.packets.data.SetColorPacketData
 import org.example.omok.server.players.Player
 
 class GameRoom : Room {
-    var playerTurn: Int = 1 // Placeholder for player turn logic, can be expanded later
     override val players: MutableList<Player> = mutableListOf()
+    var playerTurn: Int = 1 // Placeholder for player turn logic, can be expanded later
+    var status: String = GameRoomStatusType.WAITING.name
 
-    private var isGameFinished = false
     private val board = Array(19) { IntArray(19) }
 
     override fun addPlayer(player: Player) {
-        if (players.size < 2) {
-            players.add(player)
-            broadcast(
+        if (players.isEmpty()) {
+            player.playerColor = 1 // Black
+            player.send(
                 NotifyPacket(
                     NotifyPacketData(
                         listOf(
@@ -28,8 +31,36 @@ class GameRoom : Room {
                     )
                 )
             )
-        } else {
-            broadcast(
+            player.send(
+                SetColorPacket(
+                    SetColorPacketData(
+                        listOf("black")
+                    )
+                )
+            )
+        } else if (players.size == 1) {
+            val prevPlayerColor = players[0].playerColor
+            if (prevPlayerColor == 1) {
+                player.playerColor = 2 // Set to white if the previous player is black
+                player.send(
+                    SetColorPacket(
+                        SetColorPacketData(
+                            listOf("white")
+                        )
+                    )
+                )
+            } else {
+                player.playerColor = 1 // Set to black if the previous player is white
+                player.send(
+                    SetColorPacket(
+                        SetColorPacketData(
+                            listOf("black")
+                        )
+                    )
+                )
+            }
+        } else if (players.size >= 2) {
+            return player.send(
                 NotifyPacket(
                     NotifyPacketData(
                         listOf(
@@ -40,10 +71,28 @@ class GameRoom : Room {
                 )
             )
         }
+
+        players.add(player)
+        if (players.size >= 2) {
+            status = GameRoomStatusType.IN_PROGRESS.name
+        }
+        broadcast(
+            NotifyPacket(
+                NotifyPacketData(
+                    listOf(
+                        "Success",
+                        "[SYSTEM] ${player.id} has joined the game room."
+                    )
+                )
+            )
+        )
     }
 
     override fun removePlayer(player: Player) {
         players.remove(player)
+        if (players.size < 2) {
+            status = GameRoomStatusType.WAITING.name
+        }
         broadcast(
             NotifyPacket(
                 NotifyPacketData(
@@ -105,7 +154,7 @@ class GameRoom : Room {
             if (packet.packetData.playerColor.toInt() != playerTurn)  {
                 return
             } else {
-                if (isGameFinished) {
+                if (status == GameRoomStatusType.FINISHED.name) {
                     return
                 }
                 val x = packet.packetData.x.toInt()
@@ -118,7 +167,7 @@ class GameRoom : Room {
                     y = y,
                 )
                 if (checkFiveInARow(playerColor, x, y)) {
-                    isGameFinished = true
+                    status = GameRoomStatusType.FINISHED.name
                     return sendBroadcast(
                         MatchResultPacket(
                             MatchResultPacketData(

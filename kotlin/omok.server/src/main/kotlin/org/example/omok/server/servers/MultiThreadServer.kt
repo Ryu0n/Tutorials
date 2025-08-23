@@ -1,9 +1,8 @@
 package org.example.omok.server.servers
 
 import org.example.omok.server.listeners.OmokListenRunnable
+import org.example.omok.server.managers.RoomManager
 import org.example.omok.server.players.Player
-import org.example.omok.server.rooms.Room
-import org.example.omok.server.rooms.WaitingRoom
 import org.springframework.stereotype.Component
 import java.net.InetAddress
 import java.net.ServerSocket
@@ -18,10 +17,8 @@ class MultiThreadServer {
         InetAddress.getByName("localhost"),
     )
 
-    val waitingRoom = WaitingRoom()
-    val gameRooms = mutableListOf<Room>()
+    val roomManager = RoomManager()
 
-    // TODO: I/O -> Multi-Threading / Logic (handle with business logic) -> Single-Threading
     fun start() {
         while (true) {
             val randomUUIDString = UUID.randomUUID().toString()
@@ -30,11 +27,10 @@ class MultiThreadServer {
                 id = randomUUIDString,
                 socket = socket,
             )
-            waitingRoom.addPlayer(player)
+            roomManager.addPlayerToWaitingRoom(player)
             Thread(
                 OmokListenRunnable(
-                    waitingRoom = waitingRoom,
-                    gameRooms = gameRooms,
+                    roomManager = roomManager,
                     player = player,
                 )
             ).start()
