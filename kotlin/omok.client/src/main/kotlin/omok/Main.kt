@@ -5,6 +5,7 @@ import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.scene.layout.BorderPane
@@ -18,11 +19,13 @@ import omok.view.BoardView
 class Main : Application() {
     override fun start(primaryStage: Stage) {
         val chatArea = TextArea()
+        val idLabel = Label()
+        val roomLabel = Label()
         chatArea.isEditable = false
         chatArea.prefRowCount = 5
         chatArea.prefWidth = 100.0
 
-        val client = GameClient(chatArea)
+        val client = GameClient(chatArea, idLabel, roomLabel)
         val boardView = BoardView(client)
 
         val attendGameButton = Button("Attend to Game Room")
@@ -61,7 +64,9 @@ class Main : Application() {
         val root = BorderPane()
         root.center = boardView
 
-        val buttonBox = HBox(10.0, attendGameButton, exitGameButton)
+        val buttonBox = HBox(
+            10.0, attendGameButton, exitGameButton, idLabel, roomLabel
+        )
         root.bottom = buttonBox
 
         chatInput.promptText = "Please enter your message"

@@ -1,17 +1,21 @@
-package org.example.omok.server.listeners
+package org.example.omok.server.runnables
 
 import org.example.omok.server.managers.RoomManager
 import org.example.omok.server.packets.AttendancePacket
 import org.example.omok.server.packets.ExitPacket
 import org.example.omok.server.packets.Packet
 import org.example.omok.server.packets.SetPlayerIdPacket
+import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.SetPlayerIdPacketData
+import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
+import reactor.core.publisher.Sinks
 
 
 class OmokListenRunnable(
     val roomManager: RoomManager,
     val player: Player,
+//    val sink: Sinks.Many<String>,
 ) : Runnable {
     override fun run() {
         player.send(
@@ -21,6 +25,14 @@ class OmokListenRunnable(
                 )
             )
         )
+        player.send(
+            SetRoomPacket(
+                SetRoomPacketData(
+                    listOf("Waiting Room")
+                )
+            )
+        )
+//        sink.tryEmitNext("Player ${player.id} connected.")
         try {
             while (true) {
                 val packet = player.receive()

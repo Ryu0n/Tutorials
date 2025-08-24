@@ -26,6 +26,13 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+
+    // Mono, Flux를 사용하기 위한 필수 라이브러리
+    implementation("io.projectreactor:reactor-core:3.6.8")
+
+    // Kotlin 코루틴과 연동을 위한 권장 라이브러리
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1")
 }
 
 kotlin {

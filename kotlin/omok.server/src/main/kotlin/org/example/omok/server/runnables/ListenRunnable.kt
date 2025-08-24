@@ -1,4 +1,4 @@
-package org.example.omok.server.listeners
+package org.example.omok.server.runnables
 
 import org.example.omok.server.packets.example.deserializeMultiPropertyPacket
 import org.example.omok.server.packets.example.serializeMultiPropertyPacket

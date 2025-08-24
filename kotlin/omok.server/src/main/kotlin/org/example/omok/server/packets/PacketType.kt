@@ -7,6 +7,7 @@ enum class PacketType {
     EXIT,
     COORDINATE,
     SET_PLAYER_ID,
+    SET_ROOM,
     SET_COLOR,
     MATCH_RESULT,
 }

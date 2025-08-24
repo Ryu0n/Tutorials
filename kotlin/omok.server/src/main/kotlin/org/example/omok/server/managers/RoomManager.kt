@@ -2,7 +2,9 @@ package org.example.omok.server.managers
 
 import org.example.omok.server.enums.GameRoomStatusType
 import org.example.omok.server.packets.NotifyPacket
+import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.NotifyPacketData
+import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 import org.example.omok.server.rooms.GameRoom
 import org.example.omok.server.rooms.Room
@@ -35,6 +37,13 @@ class RoomManager {
         }
         waitingRoom.addPlayer(player)
         playerPosition[player] = waitingRoom
+        player.send(
+            SetRoomPacket(
+                SetRoomPacketData(
+                    listOf("Waiting Room")
+                )
+            )
+        )
     }
 
     fun addPlayerToGameRoom(player: Player) {
@@ -60,11 +69,25 @@ class RoomManager {
         if (gameRoom != null) {
             gameRoom.addPlayer(player)
             playerPosition[player] = gameRoom
+            player.send(
+                SetRoomPacket(
+                    SetRoomPacketData(
+                        listOf(gameRoom.id)
+                    )
+                )
+            )
         } else {
             val newGameRoom = GameRoom()
             newGameRoom.addPlayer(player)
             gameRooms.add(newGameRoom)
             playerPosition[player] = newGameRoom
+            player.send(
+                SetRoomPacket(
+                    SetRoomPacketData(
+                        listOf(newGameRoom.id)
+                    )
+                )
+            )
         }
     }
 

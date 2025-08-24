@@ -1,6 +1,7 @@
 package omok.model
 
 import javafx.application.Platform
+import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,8 @@ import java.nio.charset.Charset
 
 class GameClient(
     private val chatArea: TextArea,
+    private val idLabel: Label,
+    private val roomLabel: Label,
     private val host: String = "localhost",
     private val port: Int = 9090,
 ) {
@@ -87,6 +90,11 @@ class GameClient(
                 "SET_PLAYER_ID" -> {
                     playerId = payload[0]
                     chatArea.appendText("[SYSTEM] Your player ID is $playerId.\n")
+                    idLabel.text = "Player ID: $playerId"
+                }
+                "SET_ROOM" -> {
+                    val roomName = payload[0]
+                    roomLabel.text = "Room: $roomName"
                 }
                 "SET_COLOR" -> {
                     playerColor = payload[0]
