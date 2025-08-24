@@ -13,11 +13,12 @@ import org.example.omok.server.packets.data.CoordinatePacketData
 import org.example.omok.server.packets.data.ExitPacketData
 import org.example.omok.server.packets.data.MatchResultPacketData
 import java.net.Socket
+import java.util.UUID
 
 class Player (
-    val id: String,
     val socket: Socket,
 ) {
+    val id: String = "Player-${UUID.randomUUID().toString().substring(0, 5)}"
     val buffer = ByteArray(256)
     val inputStream = socket.inputStream
     val outputStream = socket.outputStream

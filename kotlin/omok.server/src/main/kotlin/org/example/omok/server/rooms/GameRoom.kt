@@ -10,8 +10,10 @@ import org.example.omok.server.packets.data.MatchResultPacketData
 import org.example.omok.server.packets.data.NotifyPacketData
 import org.example.omok.server.packets.data.SetColorPacketData
 import org.example.omok.server.players.Player
+import java.util.UUID
 
 class GameRoom : Room {
+    val id: String = "ROOM-${UUID.randomUUID().toString().substring(0, 5)}"
     override val players: MutableList<Player> = mutableListOf()
     var playerTurn: Int = 1 // Placeholder for player turn logic, can be expanded later
     var status: String = GameRoomStatusType.WAITING.name
