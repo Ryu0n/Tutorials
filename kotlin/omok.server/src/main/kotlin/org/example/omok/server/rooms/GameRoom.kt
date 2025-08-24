@@ -166,6 +166,15 @@ class GameRoom : Room {
         }
     }
 
+    fun reset() {
+        for (i in board.indices) {
+            for (j in board[i].indices) {
+                board[i][j] = 0
+            }
+        }
+        playerTurn = 1
+    }
+
     override fun broadcast(packet: Packet) {
         if (packet is CoordinatePacket) {
             if (status != GameRoomStatusType.IN_PROGRESS.name) {
@@ -196,6 +205,7 @@ class GameRoom : Room {
                     y = y,
                 )
                 if (checkFiveInARow(playerColor, x, y)) {
+                    reset()
                     status = GameRoomStatusType.FINISHED.name
                     return sendBroadcast(
                         MatchResultPacket(
