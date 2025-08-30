@@ -8,7 +8,7 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class Application(
     val multiThreadServer: MultiThreadServer,
-) : CommandLineRunner {
+): CommandLineRunner {
     override fun run(vararg args: String?) {
         println("Starting Omok server...")
         multiThreadServer.start()

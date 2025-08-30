@@ -1,13 +1,15 @@
 package org.example.omok.server.rooms
 
-
+import java.util.Collections
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.Packet
 import org.example.omok.server.packets.data.NotifyPacketData
 import org.example.omok.server.players.Player
 
 class WaitingRoom : Room {
-    override val players: MutableList<Player> = mutableListOf()
+    override val players: MutableList<Player> = Collections.synchronizedList(
+        mutableListOf()
+    )
 
     override fun addPlayer(player: Player) {
         players.add(player)

@@ -1,5 +1,6 @@
 package org.example.omok.server.managers
 
+import java.util.Collections
 import org.example.omok.server.enums.GameRoomStatusType
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.SetRoomPacket
@@ -12,8 +13,12 @@ import org.example.omok.server.rooms.WaitingRoom
 
 class RoomManager {
     val waitingRoom = WaitingRoom()
-    val gameRooms = mutableListOf<GameRoom>()
-    val playerPosition = mutableMapOf<Player, Room>()
+    val gameRooms = Collections.synchronizedList(
+        mutableListOf<GameRoom>()
+    )
+    val playerPosition = Collections.synchronizedMap(
+        mutableMapOf<Player, Room>()
+    )
 
     fun addPlayerToWaitingRoom(player: Player) {
         if (playerPosition.containsKey(player)) {
