@@ -65,7 +65,7 @@ class RoomManager {
                 currentRoom.removePlayer(player)
             }
         }
-        val gameRoom = gameRooms.find { it.status == GameRoomStatusType.WAITING.name }
+        val gameRoom = gameRooms.find { it.status != GameRoomStatusType.IN_PROGRESS.name }
         if (gameRoom != null) {
             gameRoom.addPlayer(player)
             playerPosition[player] = gameRoom

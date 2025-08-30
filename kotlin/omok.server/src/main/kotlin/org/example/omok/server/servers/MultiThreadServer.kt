@@ -1,7 +1,9 @@
 package org.example.omok.server.servers
 
+import org.example.omok.server.managers.PlayerManager
 import org.example.omok.server.runnables.OmokListenRunnable
 import org.example.omok.server.managers.RoomManager
+import org.example.omok.server.packets.PacketMessage
 import org.example.omok.server.players.Player
 import org.example.omok.server.runnables.PacketProcessingRunnable
 import org.springframework.stereotype.Component
@@ -21,26 +23,27 @@ class MultiThreadServer {
     )
 
     val roomManager = RoomManager()
-//    val sink = Sinks.many().unicast().onBackpressureBuffer<String>()
-//    val messageQueue: Flux<String> = sink.asFlux()
+    val playerManager = PlayerManager()
+    val sink = Sinks.many().unicast().onBackpressureBuffer<PacketMessage>()
+    val messageQueue: Flux<PacketMessage> = sink.asFlux()
 
     fun start() {
-//        Thread(
-//            PacketProcessingRunnable(
-//                messageQueue = messageQueue,
-//            )
-//        ).start()
+        Thread(
+            PacketProcessingRunnable(
+                messageQueue = messageQueue,
+                roomManager = roomManager,
+                playerManager = playerManager,
+            )
+        ).start()
         while (true) {
             val socket = serverSocket.accept()
-            val player = Player(
-                socket = socket,
-            )
+            val player = playerManager.addPlayer(socket)
             roomManager.addPlayerToWaitingRoom(player)
             Thread(
                 OmokListenRunnable(
                     roomManager = roomManager,
                     player = player,
-//                    sink = sink,
+                    sink = sink,
                 )
             ).start()
         }
