@@ -3,9 +3,7 @@ package org.example.omok.server.managers
 import java.util.Collections
 import org.example.omok.server.enums.GameRoomStatusType
 import org.example.omok.server.packets.NotifyPacket
-import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.NotifyPacketData
-import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 import org.example.omok.server.rooms.GameRoom
 import org.example.omok.server.rooms.Room

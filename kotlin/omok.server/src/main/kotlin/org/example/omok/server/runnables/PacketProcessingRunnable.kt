@@ -6,6 +6,7 @@ import org.example.omok.server.packets.AttendancePacket
 import org.example.omok.server.packets.ExitPacket
 import org.example.omok.server.packets.PacketMessage
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 class PacketProcessingRunnable(
     val messageQueue: Flux<PacketMessage>,
@@ -14,26 +15,38 @@ class PacketProcessingRunnable(
 ) : Runnable {
     override fun run() {
         messageQueue
-            .doOnNext(
-                { message ->
+            .flatMap { message ->
+                Mono.fromRunnable<Void> {
+                    println("Processing message from player ${message.playerId}: ${message.packet} ")
                     val playerId = message.playerId
                     val player = playerManager.players[playerId]
                     if (player == null) {
                         println("Player with ID $playerId not found.")
-                        return@doOnNext
+                        return@fromRunnable
                     }
                     val packet = message.packet
-                    if (packet is AttendancePacket) {
-                        roomManager.addPlayerToGameRoom(player)
-                        return@doOnNext
-                    } else if (packet is ExitPacket) {
-                        roomManager.addPlayerToWaitingRoom(player)
-                        return@doOnNext
+                    when (packet) {
+                        is AttendancePacket -> {
+                            roomManager.addPlayerToGameRoom(player)
+                        }
+
+                        is ExitPacket -> {
+                            roomManager.addPlayerToWaitingRoom(player)
+                        }
+
+                        else -> {
+                            val currentRoom = roomManager.playerPosition[player]
+                            currentRoom?.broadcast(packet)
+                        }
                     }
-                    val currentRoom = roomManager.playerPosition[player]
-                    currentRoom?.broadcast(packet)
+                }.onErrorResume { e ->
+                    println("Error processing packet for player ${message.playerId}. Packet: ${message.packet}, Error: ${e.message}")
+                    Mono.empty()
                 }
+            }
+            .subscribe(
+                null,
+                { error -> println("Packet processing stream terminated with error: ${error.message}") }
             )
-            .subscribe()
     }
 }

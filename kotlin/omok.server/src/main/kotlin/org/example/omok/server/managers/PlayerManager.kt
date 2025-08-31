@@ -1,6 +1,5 @@
 package org.example.omok.server.managers
 
-import java.util.Collections
 import org.example.omok.server.packets.SetPlayerIdPacket
 import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.SetPlayerIdPacketData
@@ -9,9 +8,7 @@ import org.example.omok.server.players.Player
 import java.net.Socket
 
 class PlayerManager {
-    val players = Collections.synchronizedMap(
-        mutableMapOf<String, Player>()
-    )
+    val players = mutableMapOf<String, Player>()
 
     fun addPlayer(socket: Socket): Player {
         val player = Player(socket = socket)

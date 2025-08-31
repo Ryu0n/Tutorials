@@ -49,7 +49,11 @@ class WaitingRoom : Room {
     }
 
     override fun broadcast(packet: Packet) {
-        for (player in players) {
+        val playersCopy: List<Player>
+        synchronized(players) {
+            playersCopy = ArrayList(players)
+        }
+        for (player in playersCopy) {
             player.send(packet)
         }
     }
