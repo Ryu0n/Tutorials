@@ -6,9 +6,11 @@ import org.example.omok.server.packets.MatchResultPacket
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.Packet
 import org.example.omok.server.packets.SetColorPacket
+import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.MatchResultPacketData
 import org.example.omok.server.packets.data.NotifyPacketData
 import org.example.omok.server.packets.data.SetColorPacketData
+import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 import java.util.UUID
 
@@ -21,6 +23,13 @@ class GameRoom : Room {
     private val board = Array(19) { IntArray(19) }
 
     override fun addPlayer(player: Player) {
+        player.send(
+            SetRoomPacket(
+                SetRoomPacketData(
+                    listOf(id)
+                )
+            )
+        )
         if (players.isEmpty()) {
             player.playerColor = 1 // Black
             player.send(
@@ -92,8 +101,18 @@ class GameRoom : Room {
 
     override fun removePlayer(player: Player) {
         players.remove(player)
+        broadcast(
+            NotifyPacket(
+                NotifyPacketData(
+                    listOf(
+                        "Success",
+                        "[SYSTEM] ${player.id} has left the game room."
+                    )
+                )
+            )
+        )
         if (status == GameRoomStatusType.IN_PROGRESS.name) {
-            status = GameRoomStatusType.FINISHED.name
+            status = GameRoomStatusType.WAITING.name
             val remainingPlayer = players.firstOrNull()
             if (remainingPlayer != null) {
                 broadcast(
@@ -107,19 +126,6 @@ class GameRoom : Room {
                 )
             }
         }
-        if (players.size < 2) {
-            status = GameRoomStatusType.WAITING.name
-        }
-        broadcast(
-            NotifyPacket(
-                NotifyPacketData(
-                    listOf(
-                        "Success",
-                        "[SYSTEM] ${player.id} has left the game room."
-                    )
-                )
-            )
-        )
     }
 
     private fun placeStone(playerColor: Int, x: Int, y: Int): Boolean {

@@ -42,13 +42,6 @@ class RoomManager {
         }
         waitingRoom.addPlayer(player)
         playerPosition[player] = waitingRoom
-        player.send(
-            SetRoomPacket(
-                SetRoomPacketData(
-                    listOf("Waiting Room")
-                )
-            )
-        )
     }
 
     fun addPlayerToGameRoom(player: Player) {
@@ -74,25 +67,11 @@ class RoomManager {
         if (gameRoom != null) {
             gameRoom.addPlayer(player)
             playerPosition[player] = gameRoom
-            player.send(
-                SetRoomPacket(
-                    SetRoomPacketData(
-                        listOf(gameRoom.id)
-                    )
-                )
-            )
         } else {
             val newGameRoom = GameRoom()
             newGameRoom.addPlayer(player)
             gameRooms.add(newGameRoom)
             playerPosition[player] = newGameRoom
-            player.send(
-                SetRoomPacket(
-                    SetRoomPacketData(
-                        listOf(newGameRoom.id)
-                    )
-                )
-            )
         }
     }
 

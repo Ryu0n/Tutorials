@@ -3,7 +3,9 @@ package org.example.omok.server.rooms
 import java.util.Collections
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.Packet
+import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.NotifyPacketData
+import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 
 class WaitingRoom : Room {
@@ -12,6 +14,13 @@ class WaitingRoom : Room {
     )
 
     override fun addPlayer(player: Player) {
+        player.send(
+            SetRoomPacket(
+                SetRoomPacketData(
+                    listOf("Waiting Room")
+                )
+            )
+        )
         players.add(player)
         broadcast(
             NotifyPacket(
