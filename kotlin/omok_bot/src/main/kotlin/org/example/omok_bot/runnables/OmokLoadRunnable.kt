@@ -2,6 +2,10 @@ package org.example.omok_bot.runnables
 
 import java.net.Socket
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.thread
+import kotlin.concurrent.withLock
 
 class OmokLoadRunnable(
     private val host: String = "localhost",
@@ -12,9 +16,13 @@ class OmokLoadRunnable(
     private val outputStream = socket.outputStream
     private val buffer = StringBuilder()
 
+    private val lock = ReentrantLock()
+    private val roomChanged = lock.newCondition()
+    private val colorSet = lock.newCondition()
+
     var playerId: String? = null
     var roomName: String? = null
-    lateinit var playerColor: String
+    var playerColor: String? = null
 
     private fun extractNextPacketFromBuffer(): String? {
         val startIndex = buffer.indexOf("<")
@@ -40,10 +48,19 @@ class OmokLoadRunnable(
                 playerId = payload[0]
             }
             "SET_ROOM" -> {
-                roomName = payload[0]
+                lock.withLock {
+                    roomName = payload[0]
+                    if (roomName == "Waiting Room") {
+                        playerColor = null
+                    }
+                    roomChanged.signalAll()
+                }
             }
             "SET_COLOR" -> {
-                playerColor = payload[0]
+                lock.withLock {
+                    playerColor = payload[0]
+                    colorSet.signalAll()
+                }
             }
             "COORDINATE" -> {
                 val x = payload[0].toInt()
@@ -89,6 +106,7 @@ class OmokLoadRunnable(
         }
     }
     fun sendPacket(data: String) {
+        println("OmokLoadRunnable $playerId Sending packet: $data")
         outputStream.write(data.toByteArray(Charset.defaultCharset()))
         outputStream.flush()
     }
@@ -118,8 +136,47 @@ class OmokLoadRunnable(
     }
 
     override fun run() {
-        println("OmokLoadRunnable ${playerId} is running")
-        startListening()
-        println("OmokLoadRunnable ${playerId} has finished loading")
+        thread(start = true) {
+            startListening()
+        }
+        Thread.sleep(1000)
+        try {
+            while (socket.isConnected) {
+                println("OmokLoadRunnable $playerId is running (current room: $roomName)")
+                val colorAssigned = lock.withLock {
+                    attendGame()
+                    if (colorSet.await(5, TimeUnit.SECONDS)) {
+                        println("Player $playerId assigned color: $playerColor")
+                        true
+                    } else {
+                        println("Player $playerId waiting for color assignment timed out")
+                        false
+                    }
+                }
+                if (!colorAssigned) {
+                    continue
+                }
+                println("OmokLoadRunnable $playerId is running (current room: $roomName, color: $playerColor)")
+                for (num in 1..5) {
+                    val x = (0..18).random()
+                    val y = (0..18).random()
+                    placeStone(x, y)
+                    Thread.sleep(500)
+                }
+                lock.withLock {
+                    exitGame()
+                    if (roomChanged.await(5, TimeUnit.SECONDS) && roomName == "Waiting Room") {
+                        println("Player $playerId returned to Waiting Room.")
+                    } else {
+                        println("Player $playerId failed to return to Waiting Room in time.")
+                    }
+                }
+                Thread.sleep(1000) // 루프 간 간격
+            }
+        }catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+        } finally {
+            println("OmokLoadRunnable $playerId has finished loading")
+        }
     }
 }
