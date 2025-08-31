@@ -11,7 +11,10 @@ class OmokBotApplication(
 ): CommandLineRunner {
     override fun run(vararg args: String?) {
         println("Starting Omok bot...")
-        multiThreadClient.start(numThreads = 1000)
+        multiThreadClient.start(
+            numThreads = 1000,
+            connectionInterval = 100,
+        )
     }
 }
 

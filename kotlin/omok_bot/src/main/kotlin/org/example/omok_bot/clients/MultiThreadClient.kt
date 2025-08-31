@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 class MultiThreadClient {
     fun start(
         numThreads: Int,
-        connectionInterval: Long = 100,
+        connectionInterval: Long = 1000,
     ) {
         println("MultiThreadClient started")
         for (i in 1..numThreads) {
