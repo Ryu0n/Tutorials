@@ -106,7 +106,7 @@ class OmokLoadRunnable(
         }
     }
     fun sendPacket(data: String) {
-        println("OmokLoadRunnable $playerId Sending packet: $data")
+//        println("OmokLoadRunnable $playerId Sending packet: $data")
         outputStream.write(data.toByteArray(Charset.defaultCharset()))
         outputStream.flush()
     }
@@ -142,21 +142,21 @@ class OmokLoadRunnable(
         Thread.sleep(1000)
         try {
             while (socket.isConnected) {
-                println("OmokLoadRunnable $playerId is running (current room: $roomName)")
+//                println("OmokLoadRunnable $playerId is running (current room: $roomName)")
                 val colorAssigned = lock.withLock {
                     attendGame()
                     if (colorSet.await(5, TimeUnit.SECONDS)) {
-                        println("Player $playerId assigned color: $playerColor")
+//                        println("Player $playerId assigned color: $playerColor")
                         true
                     } else {
-                        println("Player $playerId waiting for color assignment timed out")
+//                        println("Player $playerId waiting for color assignment timed out")
                         false
                     }
                 }
                 if (!colorAssigned) {
                     continue
                 }
-                println("OmokLoadRunnable $playerId is running (current room: $roomName, color: $playerColor)")
+//                println("OmokLoadRunnable $playerId is running (current room: $roomName, color: $playerColor)")
                 for (num in 1..5) {
                     val x = (0..18).random()
                     val y = (0..18).random()
@@ -166,7 +166,7 @@ class OmokLoadRunnable(
                 lock.withLock {
                     exitGame()
                     if (roomChanged.await(5, TimeUnit.SECONDS) && roomName == "Waiting Room") {
-                        println("Player $playerId returned to Waiting Room.")
+//                        println("Player $playerId returned to Waiting Room.")
                     } else {
                         println("Player $playerId failed to return to Waiting Room in time.")
                     }

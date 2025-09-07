@@ -40,6 +40,7 @@ class MultiThreadServer {
             Thread(
                 OmokListenRunnable(
                     roomManager = roomManager,
+                    playerManager = playerManager,
                     player = player,
                     sink = sink,
                 )

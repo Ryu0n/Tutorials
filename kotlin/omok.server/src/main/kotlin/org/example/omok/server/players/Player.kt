@@ -78,7 +78,7 @@ class Player (
 
         val receivedBytes = buffer.copyOf(bytesRead)
         val packet = deserialize(receivedBytes)
-        println("Received packet from player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
+//        println("Received packet from player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
         return packet
     }
 
@@ -86,7 +86,7 @@ class Player (
         try {
             val bytes = packet.serialize()
             outputStream.write(bytes)
-            println("Sent packet to player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
+//            println("Sent packet to player $id: ${packet::class.simpleName} with data: ${packet.toString()}")
             outputStream.flush()
         } catch (e: Exception) {
             println("Error sending message to player $id: ${e.message}")

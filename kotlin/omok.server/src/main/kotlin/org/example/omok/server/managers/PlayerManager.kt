@@ -6,9 +6,10 @@ import org.example.omok.server.packets.data.SetPlayerIdPacketData
 import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 import java.net.Socket
+import java.util.concurrent.ConcurrentHashMap
 
 class PlayerManager {
-    val players = mutableMapOf<String, Player>()
+    val players = ConcurrentHashMap<String, Player>()
 
     fun addPlayer(socket: Socket): Player {
         val player = Player(socket = socket)
@@ -28,5 +29,9 @@ class PlayerManager {
             )
         )
         return player
+    }
+
+    fun removePlayer(player: Player) {
+        players.remove(player.id)
     }
 }
