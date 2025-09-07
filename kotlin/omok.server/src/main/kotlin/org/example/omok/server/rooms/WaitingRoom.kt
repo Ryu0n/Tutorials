@@ -1,17 +1,15 @@
 package org.example.omok.server.rooms
 
-import java.util.Collections
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.Packet
 import org.example.omok.server.packets.SetRoomPacket
 import org.example.omok.server.packets.data.NotifyPacketData
 import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
+import java.util.concurrent.CopyOnWriteArrayList
 
 class WaitingRoom : Room {
-    override val players: MutableList<Player> = Collections.synchronizedList(
-        mutableListOf()
-    )
+    override val players: MutableList<Player> = CopyOnWriteArrayList()
 
     override fun addPlayer(player: Player) {
         player.send(

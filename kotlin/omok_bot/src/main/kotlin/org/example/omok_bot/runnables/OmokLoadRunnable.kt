@@ -149,7 +149,7 @@ class OmokLoadRunnable(
 //                        println("Player $playerId assigned color: $playerColor")
                         true
                     } else {
-//                        println("Player $playerId waiting for color assignment timed out")
+                        println("Player $playerId waiting for color assignment timed out")
                         false
                     }
                 }

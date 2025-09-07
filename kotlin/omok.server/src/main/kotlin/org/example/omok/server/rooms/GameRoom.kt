@@ -13,10 +13,11 @@ import org.example.omok.server.packets.data.SetColorPacketData
 import org.example.omok.server.packets.data.SetRoomPacketData
 import org.example.omok.server.players.Player
 import java.util.UUID
+import java.util.concurrent.CopyOnWriteArrayList
 
 class GameRoom : Room {
     val id: String = "ROOM-${UUID.randomUUID().toString().substring(0, 5)}"
-    override val players: MutableList<Player> = mutableListOf()
+    override val players: MutableList<Player> = CopyOnWriteArrayList()
     var playerTurn: Int = 1 // Placeholder for player turn logic, can be expanded later
     var status: String = GameRoomStatusType.WAITING.name
 

@@ -1,6 +1,6 @@
 package org.example.omok.server.managers
 
-import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 import org.example.omok.server.enums.GameRoomStatusType
 import org.example.omok.server.packets.NotifyPacket
 import org.example.omok.server.packets.data.NotifyPacketData
@@ -8,15 +8,12 @@ import org.example.omok.server.players.Player
 import org.example.omok.server.rooms.GameRoom
 import org.example.omok.server.rooms.Room
 import org.example.omok.server.rooms.WaitingRoom
+import java.util.concurrent.CopyOnWriteArrayList
 
 class RoomManager {
     val waitingRoom = WaitingRoom()
-    val gameRooms = Collections.synchronizedList(
-        mutableListOf<GameRoom>()
-    )
-    val playerPosition = Collections.synchronizedMap(
-        mutableMapOf<Player, Room>()
-    )
+    val gameRooms = CopyOnWriteArrayList<GameRoom>()
+    val playerPosition = ConcurrentHashMap<Player, Room>()
 
     fun addPlayerToWaitingRoom(player: Player) {
         if (playerPosition.containsKey(player)) {

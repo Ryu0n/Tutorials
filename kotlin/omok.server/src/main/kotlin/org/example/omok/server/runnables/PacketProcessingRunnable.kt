@@ -7,6 +7,7 @@ import org.example.omok.server.packets.ExitPacket
 import org.example.omok.server.packets.PacketMessage
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 
 class PacketProcessingRunnable(
     val messageQueue: Flux<PacketMessage>,
@@ -17,7 +18,7 @@ class PacketProcessingRunnable(
         messageQueue
             .flatMap { message ->
                 Mono.fromRunnable<Void> {
-//                    println("Processing message from player ${message.playerId}: ${message.packet} ")
+                    println("Processing message from player ${message.playerId}: ${message.packet} ")
                     val playerId = message.playerId
                     val player = playerManager.players[playerId]
                     if (player == null) {
@@ -39,7 +40,10 @@ class PacketProcessingRunnable(
                             currentRoom?.broadcast(packet)
                         }
                     }
-                }.onErrorResume { e ->
+                }
+//                    .subscribeOn(Schedulers.parallel())
+                    .subscribeOn(Schedulers.boundedElastic())
+                    .onErrorResume { e ->
                     println("Error processing packet for player ${message.playerId}. Packet: ${message.packet}, Error: ${e.message}")
                     Mono.empty()
                 }
