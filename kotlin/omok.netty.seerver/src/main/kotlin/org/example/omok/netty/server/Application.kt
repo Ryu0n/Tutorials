@@ -10,7 +10,7 @@ class Application(
     val multiThreadServer: MultiThreadServer,
 ): CommandLineRunner {
     override fun run(vararg args: String?) {
-        println("Starting Omok server...")
+        println("Starting Omok Netty server...")
         multiThreadServer.start()
     }
 }
