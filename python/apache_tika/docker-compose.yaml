@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  tika:
+    image: apache/tika:3.2.3.0-full
+    container_name: tika
+    ports:
+      - "9998:9998"
+    # restart: unless-stopped
+    # environment:
+    #   - TIKA_PORT=9998
+    #   - TIKA_MAX_FILE_SIZE=100MB
+    #   - TIKA_ENABLE_UNSAFE_PARSER=true
+    # volumes:
+    #   - tika_data:/data
