@@ -33,6 +33,9 @@ dependencies {
     // Kotlin 코루틴과 연동을 위한 권장 라이브러리
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1")
+
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    implementation("io.netty:netty-all:4.1.24.Final")
 }
 
 kotlin {

@@ -1,17 +1,16 @@
 package org.example.omok.netty.server
 
-import org.example.omok.netty.server.servers.MultiThreadServer
+import org.example.omok.netty.server.servers.NettyExampleServer
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class Application(
-    val multiThreadServer: MultiThreadServer,
+    val discardServer: NettyExampleServer,
 ): CommandLineRunner {
     override fun run(vararg args: String?) {
-        println("Starting Omok Netty server...")
-        multiThreadServer.start()
+        discardServer.start()
     }
 }
 

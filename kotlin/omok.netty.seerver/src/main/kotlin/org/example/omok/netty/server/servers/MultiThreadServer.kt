@@ -12,7 +12,7 @@ import java.net.InetAddress
 import java.net.ServerSocket
 
 
-@Component
+//@Component
 class MultiThreadServer {
     private val serverSocket = ServerSocket(
         9090,
