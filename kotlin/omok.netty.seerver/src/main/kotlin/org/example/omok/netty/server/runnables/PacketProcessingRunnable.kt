@@ -20,7 +20,7 @@ class PacketProcessingRunnable(
                 Mono.fromRunnable<Void> {
                     println("Processing message from player ${message.playerId}: ${message.packet} ")
                     val playerId = message.playerId
-                    val player = playerManager.players[playerId]
+                    val player = playerManager.getPlayer(playerId)
                     if (player == null) {
                         println("Player with ID $playerId not found.")
                         return@fromRunnable
