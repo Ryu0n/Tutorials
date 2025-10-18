@@ -1,15 +1,16 @@
 package org.example.omok.netty.server.handlers
 
 import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelInboundHandlerAdapter
+import io.netty.channel.SimpleChannelInboundHandler
 
-class EchoServerHandler: ChannelInboundHandlerAdapter() {
-    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-        ctx.writeAndFlush(msg)
+class EchoServerHandler : SimpleChannelInboundHandler<String>() {
+    public override fun channelRead0(ctx: ChannelHandlerContext, msg: String) {
+        println("received: $msg")
+        ctx.writeAndFlush("$msg\n")
     }
 
-    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
-        cause?.printStackTrace()
-        ctx?.close()
+    override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+        cause.printStackTrace()
+        ctx.close()
     }
 }

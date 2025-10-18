@@ -6,7 +6,10 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import org.example.omok.netty.server.handlers.DiscardServerHandler
+import io.netty.handler.codec.LineBasedFrameDecoder
+import io.netty.handler.codec.string.StringDecoder
+import io.netty.handler.codec.string.StringEncoder
+import io.netty.util.CharsetUtil
 import org.example.omok.netty.server.handlers.EchoServerHandler
 import org.springframework.stereotype.Component
 
@@ -27,7 +30,9 @@ class NettyExampleServer(
                 .childHandler(
                     object : ChannelInitializer<SocketChannel>() {
                         override fun initChannel(ch: SocketChannel) {
-//                            ch.pipeline().addLast(DiscardServerHandler())
+                            ch.pipeline().addLast(LineBasedFrameDecoder(8192))
+                            ch.pipeline().addLast(StringDecoder(CharsetUtil.UTF_8))
+                            ch.pipeline().addLast(StringEncoder(CharsetUtil.UTF_8))
                             ch.pipeline().addLast(EchoServerHandler())
                         }
                     }
