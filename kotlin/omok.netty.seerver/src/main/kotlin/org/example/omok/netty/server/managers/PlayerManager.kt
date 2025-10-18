@@ -1,19 +1,22 @@
 package org.example.omok.netty.server.managers
 
+import io.netty.channel.Channel
 import org.example.omok.netty.server.packets.SetPlayerIdPacket
 import org.example.omok.netty.server.packets.SetRoomPacket
 import org.example.omok.netty.server.packets.data.SetPlayerIdPacketData
 import org.example.omok.netty.server.packets.data.SetRoomPacketData
 import org.example.omok.netty.server.players.Player
-import java.net.Socket
 import java.util.concurrent.ConcurrentHashMap
 
 class PlayerManager {
-    val players = ConcurrentHashMap<String, Player>()
+    val playersById = ConcurrentHashMap<String, Player>()
+    val playersByChannel = ConcurrentHashMap<Channel, Player>()
 
-    fun addPlayer(socket: Socket): Player {
-        val player = Player(socket = socket)
-        players[player.id] = player
+    fun addPlayer(channel: Channel): Player {
+        val player = Player(channel = channel)
+        playersById[player.id] = player
+        playersByChannel[channel] = player
+
         player.send(
             SetPlayerIdPacket(
                 SetPlayerIdPacketData(
@@ -28,10 +31,21 @@ class PlayerManager {
                 )
             )
         )
+        println("Player ${player.id} added.")
         return player
     }
 
     fun removePlayer(player: Player) {
-        players.remove(player.id)
+        playersById.remove(player.id)
+        playersByChannel.remove(player.channel)
+        println("Player ${player.id} removed.")
+    }
+
+    fun getPlayer(playerId: String): Player? {
+        return playersById[playerId]
+    }
+
+    fun getPlayer(channel: Channel): Player? {
+        return playersByChannel[channel]
     }
 }
