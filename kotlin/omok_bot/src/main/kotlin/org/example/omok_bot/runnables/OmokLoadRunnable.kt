@@ -9,7 +9,8 @@ import kotlin.concurrent.withLock
 
 class OmokLoadRunnable(
     private val host: String = "localhost",
-    private val port: Int = 9090,
+    private val port: Int = 8009,
+    private val awaitTimeout: Long = 5000
 ): Runnable {
     private val socket = Socket(host, port)
     private val inputStream = socket.inputStream
@@ -107,7 +108,8 @@ class OmokLoadRunnable(
     }
     fun sendPacket(data: String) {
 //        println("OmokLoadRunnable $playerId Sending packet: $data")
-        outputStream.write(data.toByteArray(Charset.defaultCharset()))
+        outputStream.write((data + "\n").toByteArray(Charset.defaultCharset()))
+//        outputStream.write(data.toByteArray(Charset.defaultCharset()))
         outputStream.flush()
     }
 
@@ -145,7 +147,7 @@ class OmokLoadRunnable(
 //                println("OmokLoadRunnable $playerId is running (current room: $roomName)")
                 val colorAssigned = lock.withLock {
                     attendGame()
-                    if (colorSet.await(5, TimeUnit.SECONDS)) {
+                    if (colorSet.await(awaitTimeout, TimeUnit.SECONDS)) {
 //                        println("Player $playerId assigned color: $playerColor")
                         true
                     } else {
@@ -165,7 +167,7 @@ class OmokLoadRunnable(
                 }
                 lock.withLock {
                     exitGame()
-                    if (roomChanged.await(5, TimeUnit.SECONDS) && roomName == "Waiting Room") {
+                    if (roomChanged.await(awaitTimeout, TimeUnit.SECONDS) && roomName == "Waiting Room") {
 //                        println("Player $playerId returned to Waiting Room.")
                     } else {
                         println("Player $playerId failed to return to Waiting Room in time.")
